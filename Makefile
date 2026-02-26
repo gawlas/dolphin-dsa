@@ -7,7 +7,7 @@ CFLAGS += -Iinclude -g
 BUILD_DIR = build
 
 # all
-all: lib
+all: lib tests examples
 
 # lib build
 SRC_DIR = src
@@ -60,8 +60,26 @@ $(UNITY_OBJ): $(UNITY_SRC) | $(TEST_OUT_DIR)
 $(TEST_OUT_DIR):
 	mkdir -p $(TEST_OUT_DIR)
 
+# examples build
+EXAMPLE_DIR = examples
+EXAMPLE_OUT_DIR = $(BUILD_DIR)/examples
+EXAMPLE_SRCS = $(wildcard $(EXAMPLE_DIR)/*.c)
+EXAMPLE_OBJS = $(EXAMPLE_SRCS:$(EXAMPLE_DIR)/%.c=$(EXAMPLE_OUT_DIR)/%.o)
+EXAMPLE_BINS = $(EXAMPLE_SRCS:$(EXAMPLE_DIR)/%.c=$(EXAMPLE_OUT_DIR)/%)
+
+examples: $(EXAMPLE_OBJS) $(EXAMPLE_BINS)
+
+$(EXAMPLE_OUT_DIR)/%.o: $(EXAMPLE_DIR)/%.c | $(EXAMPLE_OUT_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(EXAMPLE_OUT_DIR)/%: $(EXAMPLE_OUT_DIR)/%.o $(LIB)
+	$(CC) $(CFLAGS) -o $@ $< $(LIB)
+
+$(EXAMPLE_OUT_DIR):
+	mkdir -p $(EXAMPLE_OUT_DIR)
+
 # clean
 clean:
 	rm -rf $(BUILD_DIR)
 
-.PHONY: all clean tests test examples
+.PHONY: all clean lib tests examples run_tests
