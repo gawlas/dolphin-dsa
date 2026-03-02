@@ -31,8 +31,9 @@ typedef struct dds_vector {
  *
  * @param vector       Pointer to an uninitialized vector.
  * @param element_size Size of a single element in bytes.
- * @param alloc        Allocator to use; malloc, realloc and free must not be NULL.
- * @return DDS_OK on success, DDS_ERROR if alloc functions are NULL.
+ * @param alloc        Allocator to use; malloc, realloc, and free must not be NULL.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector is NULL,
+ *         element_size is 0, or any alloc function is NULL.
  */
 dds_result_t dds_vector_init(dds_vector_t* vector, size_t element_size, dds_alloc_t alloc);
 
@@ -63,10 +64,10 @@ dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element);
  * @param vector  Pointer to an initialized vector.
  * @param index   Zero-based index of the element.
  * @param element Destination buffer of at least element_size bytes.
- * @return DDS_OK on success, DDS_INVALID_PARAMETER if any argument is NULL
- *         or index is out of range.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector or element is NULL,
+ *         DDS_OUT_OF_RANGE if index is out of bounds.
  */
-dds_result_t dds_vector_get(dds_vector_t* vector, size_t index, void* element);
+dds_result_t dds_vector_get(const dds_vector_t* vector, size_t index, void* element);
 
 /**
  * Return a pointer to the element at the given index.
@@ -75,9 +76,9 @@ dds_result_t dds_vector_get(dds_vector_t* vector, size_t index, void* element);
  *
  * @param vector Pointer to an initialized vector.
  * @param index  Zero-based index of the element.
- * @return Pointer to the element, or NULL if vector is NULL or index is out of range.
+ * @return Pointer to the element, or NULL if the vector is NULL or index is out of range.
  */
-void* dds_vector_at(dds_vector_t* vector, size_t index);
+void* dds_vector_at(const dds_vector_t* vector, size_t index);
 
 /**
  * Return a typed pointer to the element at the given index.
@@ -89,6 +90,33 @@ void* dds_vector_at(dds_vector_t* vector, size_t index);
  * @param Type   Element type.
  * @param index  Zero-based index of the element.
  */
-#define dds_vector_index(vector, Type, index) (&(((Type*)(vector)->data)[(index)]))
+#define dds_vector_index(vector, Type, index) (((Type*)(vector)->data)[(index)])
+
+/**
+ * Return the number of elements currently stored in the vector.
+ *
+ * @param vector Pointer to an initialized vector.
+ * @return Number of elements, or 0 if the vector is NULL.
+ */
+size_t dds_vector_get_size(const dds_vector_t* vector);
+
+/**
+ * Return the current capacity of the vector's internal buffer.
+ *
+ * @param vector Pointer to an initialized vector.
+ * @return Capacity in elements, or 0 if the vector is NULL.
+ */
+size_t dds_vector_get_capacity(const dds_vector_t* vector);
+
+/**
+ * Return a pointer to the vector's internal data buffer.
+ *
+ * The pointer is valid until the next operation that modifies the vector.
+ * Returns NULL if the vector is NULL or has never had any elements pushed.
+ *
+ * @param vector Pointer to an initialized vector.
+ * @return Pointer to the raw data buffer, or NULL if the vector is NULL or empty.
+ */
+void* dds_vector_get_data(const dds_vector_t* vector);
 
 #endif //DOLPHIN_DSA_VECTOR_H
