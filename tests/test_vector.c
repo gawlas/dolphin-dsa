@@ -109,6 +109,118 @@ void dds_vector_clear_should_return_invalid_parameter_when_vector_null(void) {
     TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
 }
 
+/* dds_vector_shrink_to_fit */
+
+void dds_vector_shrink_to_fit_should_return_ok(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    dds_vector_reserve(&vector, 10);
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    const dds_result_t result = dds_vector_shrink_to_fit(&vector);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_shrink_to_fit_should_set_capacity_to_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    dds_vector_reserve(&vector, 10);
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    dds_vector_shrink_to_fit(&vector);
+
+    TEST_ASSERT_EQUAL_size_t(1, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_shrink_to_fit_should_preserve_elements(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+    dds_vector_reserve(&vector, 10);
+
+    dds_vector_shrink_to_fit(&vector);
+
+    int out;
+    dds_vector_get(&vector, 0, &out); TEST_ASSERT_EQUAL_INT(10, out);
+    dds_vector_get(&vector, 1, &out); TEST_ASSERT_EQUAL_INT(20, out);
+    dds_vector_get(&vector, 2, &out); TEST_ASSERT_EQUAL_INT(30, out);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_shrink_to_fit_should_not_change_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    dds_vector_reserve(&vector, 10);
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    dds_vector_shrink_to_fit(&vector);
+
+    TEST_ASSERT_EQUAL_size_t(1, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_shrink_to_fit_should_free_buffer_when_empty(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    dds_vector_reserve(&vector, 10);
+    dds_vector_shrink_to_fit(&vector);
+
+    TEST_ASSERT_NULL(dds_vector_get_data(&vector));
+    TEST_ASSERT_EQUAL_size_t(0, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_shrink_to_fit_should_be_noop_when_already_fitted(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    /* after a single push capacity == size == 1 */
+    const dds_result_t result = dds_vector_shrink_to_fit(&vector);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    TEST_ASSERT_EQUAL_size_t(1, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_shrink_to_fit_should_return_invalid_parameter_when_vector_null(void) {
+    const dds_result_t result = dds_vector_shrink_to_fit(NULL);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+}
+
+void dds_vector_shrink_to_fit_should_return_overflow_on_buffer_size_overflow(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    /* make size > capacity so the no-op branch is skipped, then overflow */
+    vector.element_size = SIZE_MAX / 2 + 1;
+    vector.size = 2;
+    vector.capacity = 4;
+
+    const dds_result_t result = dds_vector_shrink_to_fit(&vector);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OVERFLOW, result);
+    vector.element_size = sizeof(int);
+    vector.size = 0;
+    vector.capacity = 0;
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_reserve */
 
 void dds_vector_reserve_should_return_ok(void) {

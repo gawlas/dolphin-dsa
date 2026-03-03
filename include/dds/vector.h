@@ -74,6 +74,22 @@ dds_result_t dds_vector_clear(dds_vector_t* vector);
  */
 dds_result_t dds_vector_reserve(dds_vector_t* vector, size_t capacity);
 
+
+/**
+ * Release excess capacity so the internal buffer matches the current size.
+ *
+ * If the vector is empty, frees the buffer entirely and sets capacity to 0.
+ * If capacity already equals size, does nothing.
+ * Does not change the size of the vector or the elements it contains.
+ *
+ * @param vector Pointer to an initialized vector.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector is NULL,
+ *         DDS_OVERFLOW if the required buffer size overflows size_t,
+ *         DDS_OUT_OF_MEMORY if reallocation fails.
+ */
+dds_result_t dds_vector_shrink_to_fit(dds_vector_t* vector);
+
+
 /**
  * Append an element to the end of the vector.
  *

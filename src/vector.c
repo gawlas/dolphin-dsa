@@ -63,6 +63,32 @@ dds_result_t dds_vector_reserve(dds_vector_t* vector, const size_t capacity) {
     return DDS_OK;
 }
 
+dds_result_t dds_vector_shrink_to_fit(dds_vector_t* vector) {
+    if (vector == NULL) return DDS_INVALID_PARAMETER;
+    if (vector->size == vector->capacity) return DDS_OK;
+
+    if (vector->size == 0) {
+        vector->alloc.free(vector->alloc.context, vector->data);
+        vector->data = NULL;
+        vector->capacity = 0;
+
+        return DDS_OK;
+    }
+
+    const size_t new_capacity = vector->size;
+    if (new_capacity > SIZE_MAX / vector->element_size) return DDS_OVERFLOW;
+    const size_t new_buffer_size = new_capacity * vector->element_size;
+    void* new_buffer = vector->alloc.realloc(vector->alloc.context, vector->data, new_buffer_size);
+
+    if (new_buffer == NULL) return DDS_OUT_OF_MEMORY;
+
+    vector->data = new_buffer;
+    vector->capacity = new_capacity;
+
+    return DDS_OK;
+}
+
+
 dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element) {
     if (vector == NULL) return DDS_INVALID_PARAMETER;
     if (element == NULL) return DDS_INVALID_PARAMETER;

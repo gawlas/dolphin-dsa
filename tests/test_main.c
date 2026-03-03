@@ -15,6 +15,16 @@ void dds_vector_clear_should_preserve_capacity(void);
 void dds_vector_clear_should_allow_push_after_clear(void);
 void dds_vector_clear_should_return_invalid_parameter_when_vector_null(void);
 
+/* dds_vector_shrink_to_fit */
+void dds_vector_shrink_to_fit_should_return_ok(void);
+void dds_vector_shrink_to_fit_should_set_capacity_to_size(void);
+void dds_vector_shrink_to_fit_should_preserve_elements(void);
+void dds_vector_shrink_to_fit_should_not_change_size(void);
+void dds_vector_shrink_to_fit_should_free_buffer_when_empty(void);
+void dds_vector_shrink_to_fit_should_be_noop_when_already_fitted(void);
+void dds_vector_shrink_to_fit_should_return_invalid_parameter_when_vector_null(void);
+void dds_vector_shrink_to_fit_should_return_overflow_on_buffer_size_overflow(void);
+
 /* dds_vector_reserve */
 void dds_vector_reserve_should_return_ok(void);
 void dds_vector_reserve_should_set_capacity(void);
@@ -102,6 +112,15 @@ int main(void) {
     RUN_TEST(dds_vector_clear_should_preserve_capacity);
     RUN_TEST(dds_vector_clear_should_allow_push_after_clear);
     RUN_TEST(dds_vector_clear_should_return_invalid_parameter_when_vector_null);
+
+    RUN_TEST(dds_vector_shrink_to_fit_should_return_ok);
+    RUN_TEST(dds_vector_shrink_to_fit_should_set_capacity_to_size);
+    RUN_TEST(dds_vector_shrink_to_fit_should_preserve_elements);
+    RUN_TEST(dds_vector_shrink_to_fit_should_not_change_size);
+    RUN_TEST(dds_vector_shrink_to_fit_should_free_buffer_when_empty);
+    RUN_TEST(dds_vector_shrink_to_fit_should_be_noop_when_already_fitted);
+    RUN_TEST(dds_vector_shrink_to_fit_should_return_invalid_parameter_when_vector_null);
+    RUN_TEST(dds_vector_shrink_to_fit_should_return_overflow_on_buffer_size_overflow);
 
     RUN_TEST(dds_vector_reserve_should_return_ok);
     RUN_TEST(dds_vector_reserve_should_set_capacity);
