@@ -58,6 +58,20 @@ void dds_vector_free(dds_vector_t* vector);
  */
 dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element);
 
+
+/**
+ * Remove the last element from the vector and copy it into the provided buffer.
+ *
+ * Does not shrink the internal buffer.
+ *
+ * @param vector  Pointer to an initialized vector.
+ * @param element Destination buffer of at least element_size bytes, or NULL to discard.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector is NULL,
+ *         DDS_OUT_OF_RANGE if the vector is empty.
+ */
+dds_result_t dds_vector_pop_back(dds_vector_t* vector, void* element);
+
+
 /**
  * Copy an element at the given index into the provided buffer.
  *

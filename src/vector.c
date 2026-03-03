@@ -67,6 +67,21 @@ dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element) {
     return DDS_OK;
 }
 
+dds_result_t dds_vector_pop_back(dds_vector_t* vector, void* element) {
+    if (vector == NULL) return DDS_INVALID_PARAMETER;
+    if (vector->size == 0) return DDS_OUT_OF_RANGE;
+
+    // if the element is not NULL, copy the last element from vector to it, otherwise discard
+    if (element != NULL) {
+        const void* source = (char*)vector->data + ((vector->size - 1) * vector->element_size);
+        memcpy(element, source, vector->element_size);
+    }
+
+    vector->size--;
+
+    return DDS_OK;
+}
+
 dds_result_t dds_vector_get(const dds_vector_t* vector, size_t index, void* element) {
     if (vector == NULL) return DDS_INVALID_PARAMETER;
     if (element == NULL) return DDS_INVALID_PARAMETER;

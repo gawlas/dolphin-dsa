@@ -18,6 +18,16 @@ void dds_vector_push_back_should_grow_capacity(void);
 void dds_vector_push_back_should_return_overflow_when_capacity_overflows(void);
 void dds_vector_push_back_should_return_overflow_when_buffer_size_overflows(void);
 
+/* dds_vector_pop_back */
+void dds_vector_pop_back_should_return_ok(void);
+void dds_vector_pop_back_should_return_correct_element(void);
+void dds_vector_pop_back_should_decrease_size(void);
+void dds_vector_pop_back_should_not_change_capacity(void);
+void dds_vector_pop_back_should_return_elements_in_lifo_order(void);
+void dds_vector_pop_back_should_discard_when_element_null(void);
+void dds_vector_pop_back_should_return_invalid_parameter_when_vector_null(void);
+void dds_vector_pop_back_should_return_out_of_range_when_empty(void);
+
 /* dds_vector_get */
 void dds_vector_get_should_return_ok(void);
 void dds_vector_get_should_return_invalid_parameter_when_vector_null(void);
@@ -73,6 +83,15 @@ int main(void) {
     RUN_TEST(dds_vector_push_back_should_grow_capacity);
     RUN_TEST(dds_vector_push_back_should_return_overflow_when_capacity_overflows);
     RUN_TEST(dds_vector_push_back_should_return_overflow_when_buffer_size_overflows);
+
+    RUN_TEST(dds_vector_pop_back_should_return_ok);
+    RUN_TEST(dds_vector_pop_back_should_return_correct_element);
+    RUN_TEST(dds_vector_pop_back_should_decrease_size);
+    RUN_TEST(dds_vector_pop_back_should_not_change_capacity);
+    RUN_TEST(dds_vector_pop_back_should_return_elements_in_lifo_order);
+    RUN_TEST(dds_vector_pop_back_should_discard_when_element_null);
+    RUN_TEST(dds_vector_pop_back_should_return_invalid_parameter_when_vector_null);
+    RUN_TEST(dds_vector_pop_back_should_return_out_of_range_when_empty);
 
     RUN_TEST(dds_vector_get_should_return_ok);
     RUN_TEST(dds_vector_get_should_return_invalid_parameter_when_vector_null);
