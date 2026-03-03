@@ -401,6 +401,237 @@ void dds_vector_push_back_should_return_overflow_when_buffer_size_overflows(void
     dds_vector_free(&vector);
 }
 
+/* dds_vector_insert */
+
+void dds_vector_insert_should_return_ok(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    const int insert = 99;
+    const dds_result_t result = dds_vector_insert(&vector, 0, &insert);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_should_increase_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int a = 1, b = 2;
+    dds_vector_push_back(&vector, &a);
+
+    dds_vector_insert(&vector, 0, &b);
+
+    TEST_ASSERT_EQUAL_size_t(2, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_should_place_element_at_index(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    const int insert = 99;
+    dds_vector_insert(&vector, 1, &insert);
+
+    int out;
+    dds_vector_get(&vector, 0, &out); TEST_ASSERT_EQUAL_INT(10, out);
+    dds_vector_get(&vector, 1, &out); TEST_ASSERT_EQUAL_INT(99, out);
+    dds_vector_get(&vector, 2, &out); TEST_ASSERT_EQUAL_INT(20, out);
+    dds_vector_get(&vector, 3, &out); TEST_ASSERT_EQUAL_INT(30, out);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_should_shift_elements_right(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    const int insert = 99;
+    dds_vector_insert(&vector, 0, &insert);
+
+    int out;
+    dds_vector_get(&vector, 0, &out); TEST_ASSERT_EQUAL_INT(99, out);
+    dds_vector_get(&vector, 1, &out); TEST_ASSERT_EQUAL_INT(10, out);
+    dds_vector_get(&vector, 2, &out); TEST_ASSERT_EQUAL_INT(20, out);
+    dds_vector_get(&vector, 3, &out); TEST_ASSERT_EQUAL_INT(30, out);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_at_end_should_append(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20};
+    for (int i = 0; i < 2; i++) dds_vector_push_back(&vector, &values[i]);
+
+    const int insert = 99;
+    dds_vector_insert(&vector, 2, &insert);
+
+    int out;
+    dds_vector_get(&vector, 2, &out);
+    TEST_ASSERT_EQUAL_INT(99, out);
+    TEST_ASSERT_EQUAL_size_t(3, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_should_return_invalid_parameter_when_vector_null(void) {
+    const int value = 1;
+    const dds_result_t result = dds_vector_insert(NULL, 0, &value);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+}
+
+void dds_vector_insert_should_return_invalid_parameter_when_element_null(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const dds_result_t result = dds_vector_insert(&vector, 0, NULL);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_should_return_out_of_range_when_index_exceeds_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    const int insert = 99;
+    const dds_result_t result = dds_vector_insert(&vector, 2, &insert);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OUT_OF_RANGE, result);
+    dds_vector_free(&vector);
+}
+
+/* dds_vector_remove */
+
+void dds_vector_remove_should_return_ok(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    int out;
+    const dds_result_t result = dds_vector_remove(&vector, 0, &out);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_return_correct_element(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    int out;
+    dds_vector_remove(&vector, 1, &out);
+
+    TEST_ASSERT_EQUAL_INT(20, out);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_decrease_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    dds_vector_remove(&vector, 0, NULL);
+
+    TEST_ASSERT_EQUAL_size_t(2, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_shift_elements_left(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    dds_vector_remove(&vector, 1, NULL);
+
+    int out;
+    dds_vector_get(&vector, 0, &out); TEST_ASSERT_EQUAL_INT(10, out);
+    dds_vector_get(&vector, 1, &out); TEST_ASSERT_EQUAL_INT(30, out);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_not_change_capacity(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {10, 20, 30};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    const size_t capacity_before = dds_vector_get_capacity(&vector);
+    dds_vector_remove(&vector, 0, NULL);
+
+    TEST_ASSERT_EQUAL_size_t(capacity_before, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_discard_when_element_null(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    const dds_result_t result = dds_vector_remove(&vector, 0, NULL);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    TEST_ASSERT_EQUAL_size_t(0, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_return_invalid_parameter_when_vector_null(void) {
+    int out;
+    const dds_result_t result = dds_vector_remove(NULL, 0, &out);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+}
+
+void dds_vector_remove_should_return_out_of_range_when_index_exceeds_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    int out;
+    const dds_result_t result = dds_vector_remove(&vector, 1, &out);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OUT_OF_RANGE, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_remove_should_return_out_of_range_on_empty_vector(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    int out;
+    const dds_result_t result = dds_vector_remove(&vector, 0, &out);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OUT_OF_RANGE, result);
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_pop_back */
 
 void dds_vector_pop_back_should_return_ok(void) {

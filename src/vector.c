@@ -123,6 +123,69 @@ dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element) {
     return DDS_OK;
 }
 
+dds_result_t dds_vector_insert(dds_vector_t* vector, const size_t index, const void* element) {
+    if (vector == NULL) return DDS_INVALID_PARAMETER;
+    if (element == NULL) return DDS_INVALID_PARAMETER;
+    if (index > vector->size) return DDS_OUT_OF_RANGE;
+
+    // resize data buffer when full
+    if (vector->size >= vector->capacity) {
+        if (vector->capacity > SIZE_MAX / GROWTH_FACTOR) return DDS_OVERFLOW;
+        const size_t new_capacity = (vector->capacity == 0) ? INITIAL_SIZE : vector->capacity * GROWTH_FACTOR;
+
+        if (new_capacity > SIZE_MAX / vector->element_size) return DDS_OVERFLOW;
+        const size_t new_buffer_size = new_capacity * vector->element_size;
+
+        void* new_buffer = vector->alloc.realloc(vector->alloc.context, vector->data, new_buffer_size);
+
+        // if realloc fail, return error
+        if (new_buffer == NULL) return DDS_OUT_OF_MEMORY;
+
+        // update buffer
+        vector->data = new_buffer;
+        vector->capacity = new_capacity;
+    }
+
+    // move vector elements to make a space for new element
+    void* source = (char*)vector->data + (index * vector->element_size);
+    void* destination = (char*)source + vector->element_size;
+    const size_t elements_to_move = vector->size - index;
+    const size_t bytes_to_move = elements_to_move * vector->element_size;
+
+    memmove(destination, source, bytes_to_move);
+
+    // copy element to vector
+    memcpy(source, element, vector->element_size);
+    vector->size++;
+
+    return DDS_OK;
+}
+
+
+dds_result_t dds_vector_remove(dds_vector_t* vector, const size_t index, void* element) {
+    if (vector == NULL) return DDS_INVALID_PARAMETER;
+    if (index >= vector->size) return DDS_OUT_OF_RANGE;
+
+    // if the element is not NULL, copy element at index from vector to it, otherwise discard
+    if (element != NULL) {
+        const void* source = (char*)vector->data + (index * vector->element_size);
+        memcpy(element, source, vector->element_size);
+    }
+
+    // move vector elements to fill the gap
+    void* destination = (char*)vector->data + (index * vector->element_size);
+    void* source = (char*)destination + vector->element_size;
+    const size_t elements_to_move = vector->size - index - 1;
+    const size_t bytes_to_move = elements_to_move * vector->element_size;
+
+    memmove(destination, source, bytes_to_move);
+
+    vector->size--;
+
+    return DDS_OK;
+}
+
+
 dds_result_t dds_vector_pop_back(dds_vector_t* vector, void* element) {
     if (vector == NULL) return DDS_INVALID_PARAMETER;
     if (vector->size == 0) return DDS_OUT_OF_RANGE;

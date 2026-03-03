@@ -104,6 +104,38 @@ dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element);
 
 
 /**
+ * Insert an element at the given index, shifting subsequent elements right.
+ *
+ * An index equal to the current size appends to the end.
+ * Grows the internal buffer if necessary.
+ *
+ * @param vector  Pointer to an initialized vector.
+ * @param index   Zero-based index at which to insert; must be <= size.
+ * @param element Pointer to the element to copy into the vector.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector or element is NULL,
+ *         DDS_OUT_OF_RANGE if index exceeds size,
+ *         DDS_OVERFLOW if the required buffer size overflows size_t,
+ *         DDS_OUT_OF_MEMORY if allocation fails.
+ */
+dds_result_t dds_vector_insert(dds_vector_t* vector, size_t index, const void* element);
+
+
+/**
+ * Remove the element at the given index, shifting subsequent elements left.
+ *
+ * Does not shrink the internal buffer.
+ *
+ * @param vector  Pointer to an initialized vector.
+ * @param index   Zero-based index of the element to remove; must be < size.
+ * @param element Destination buffer of at least element_size bytes to copy the
+ *                removed element into, or NULL to discard.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector is NULL,
+ *         DDS_OUT_OF_RANGE if index is out of bounds.
+ */
+dds_result_t dds_vector_remove(dds_vector_t* vector, size_t index, void* element);
+
+
+/**
  * Remove the last element from the vector and copy it into the provided buffer.
  *
  * Does not shrink the internal buffer.
