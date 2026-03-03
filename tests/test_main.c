@@ -8,6 +8,15 @@ void dds_vector_init_should_create_correct_structure(void);
 /* dds_vector_free */
 void dds_vector_free_should_zero_alloc(void);
 
+/* dds_vector_reserve */
+void dds_vector_reserve_should_return_ok(void);
+void dds_vector_reserve_should_set_capacity(void);
+void dds_vector_reserve_should_not_change_size(void);
+void dds_vector_reserve_should_be_noop_when_capacity_already_sufficient(void);
+void dds_vector_reserve_should_return_invalid_parameter_when_vector_null(void);
+void dds_vector_reserve_should_return_invalid_parameter_when_capacity_zero(void);
+void dds_vector_reserve_should_return_overflow_on_buffer_size_overflow(void);
+
 /* dds_vector_push_back */
 void dds_vector_push_back_should_return_ok(void);
 void dds_vector_push_back_should_increase_size(void);
@@ -74,6 +83,14 @@ int main(void) {
     RUN_TEST(dds_vector_init_should_create_correct_structure);
 
     RUN_TEST(dds_vector_free_should_zero_alloc);
+
+    RUN_TEST(dds_vector_reserve_should_return_ok);
+    RUN_TEST(dds_vector_reserve_should_set_capacity);
+    RUN_TEST(dds_vector_reserve_should_not_change_size);
+    RUN_TEST(dds_vector_reserve_should_be_noop_when_capacity_already_sufficient);
+    RUN_TEST(dds_vector_reserve_should_return_invalid_parameter_when_vector_null);
+    RUN_TEST(dds_vector_reserve_should_return_invalid_parameter_when_capacity_zero);
+    RUN_TEST(dds_vector_reserve_should_return_overflow_on_buffer_size_overflow);
 
     RUN_TEST(dds_vector_push_back_should_return_ok);
     RUN_TEST(dds_vector_push_back_should_increase_size);

@@ -33,6 +33,28 @@ void dds_vector_free(dds_vector_t* vector) {
     memset(&vector->alloc, 0, sizeof(vector->alloc));
 }
 
+dds_result_t dds_vector_reserve(dds_vector_t* vector, const size_t capacity) {
+    if (vector == NULL) return DDS_INVALID_PARAMETER;
+    if (capacity == 0) return DDS_INVALID_PARAMETER;
+
+    // resize data buffer when requested capacity greater than current capacity
+    if (capacity > vector->capacity) {
+        if (capacity > SIZE_MAX / vector->element_size) return DDS_OVERFLOW;
+        const size_t new_buffer_size = capacity * vector->element_size;
+
+        void* new_buffer = vector->alloc.realloc(vector->alloc.context, vector->data, new_buffer_size);
+
+        // if realloc fail, return error
+        if (new_buffer == NULL) return DDS_OUT_OF_MEMORY;
+
+        // update buffer
+        vector->data = new_buffer;
+        vector->capacity = capacity;
+    }
+
+    return DDS_OK;
+}
+
 dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element) {
     if (vector == NULL) return DDS_INVALID_PARAMETER;
     if (element == NULL) return DDS_INVALID_PARAMETER;

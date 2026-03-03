@@ -46,6 +46,80 @@ void dds_vector_init_should_create_correct_structure(void) {
     TEST_ASSERT_EQUAL_size_t(element_size, vector.element_size);
 }
 
+/* dds_vector_reserve */
+
+void dds_vector_reserve_should_return_ok(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const dds_result_t result = dds_vector_reserve(&vector, 10);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_reserve_should_set_capacity(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    dds_vector_reserve(&vector, 10);
+
+    TEST_ASSERT_EQUAL_size_t(10, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_reserve_should_not_change_size(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+    dds_vector_reserve(&vector, 10);
+
+    TEST_ASSERT_EQUAL_size_t(1, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_reserve_should_be_noop_when_capacity_already_sufficient(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    dds_vector_reserve(&vector, 10);
+    const dds_result_t result = dds_vector_reserve(&vector, 5);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    TEST_ASSERT_EQUAL_size_t(10, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_reserve_should_return_invalid_parameter_when_vector_null(void) {
+    const dds_result_t result = dds_vector_reserve(NULL, 10);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+}
+
+void dds_vector_reserve_should_return_invalid_parameter_when_capacity_zero(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const dds_result_t result = dds_vector_reserve(&vector, 0);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_reserve_should_return_overflow_on_buffer_size_overflow(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    vector.element_size = SIZE_MAX / 2 + 1;
+    const dds_result_t result = dds_vector_reserve(&vector, 2);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OVERFLOW, result);
+    vector.element_size = sizeof(int);
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_push_back */
 
 void dds_vector_push_back_should_return_ok(void) {

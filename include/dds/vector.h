@@ -46,6 +46,21 @@ dds_result_t dds_vector_init(dds_vector_t* vector, size_t element_size, dds_allo
  */
 void dds_vector_free(dds_vector_t* vector);
 
+
+/**
+ * Pre-allocate capacity for at least the given number of elements.
+ *
+ * If the current capacity already satisfies the request, does nothing.
+ * Does not change the size of the vector.
+ *
+ * @param vector   Pointer to an initialized vector.
+ * @param capacity Minimum number of elements to reserve space for.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector is NULL or capacity is 0,
+ *         DDS_OVERFLOW if the required buffer size overflows size_t,
+ *         DDS_OUT_OF_MEMORY if allocation fails.
+ */
+dds_result_t dds_vector_reserve(dds_vector_t* vector, size_t capacity);
+
 /**
  * Append an element to the end of the vector.
  *
