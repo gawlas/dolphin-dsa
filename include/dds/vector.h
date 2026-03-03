@@ -50,6 +50,17 @@ void dds_vector_free(dds_vector_t* vector);
 
 
 /**
+ * Remove all elements from the vector without freeing the internal buffer.
+ *
+ * Resets size to 0 while preserving the allocated capacity,
+ * allowing the buffer to be reused without reallocation.
+ *
+ * @param vector Pointer to an initialized vector.
+ * @return DDS_OK on success, DDS_INVALID_PARAMETER if vector is NULL.
+ */
+dds_result_t dds_vector_clear(dds_vector_t* vector);
+
+/**
  * Pre-allocate capacity for at least the given number of elements.
  *
  * If the current capacity already satisfies the request, does nothing.

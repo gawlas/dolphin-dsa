@@ -46,6 +46,69 @@ void dds_vector_init_should_create_correct_structure(void) {
     TEST_ASSERT_EQUAL_size_t(element_size, vector.element_size);
 }
 
+/* dds_vector_clear */
+
+void dds_vector_clear_should_return_ok(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const dds_result_t result = dds_vector_clear(&vector);
+
+    TEST_ASSERT_EQUAL_INT(DDS_OK, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_clear_should_reset_size_to_zero(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {1, 2, 3};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    dds_vector_clear(&vector);
+
+    TEST_ASSERT_EQUAL_size_t(0, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_clear_should_preserve_capacity(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int values[] = {1, 2, 3};
+    for (int i = 0; i < 3; i++) dds_vector_push_back(&vector, &values[i]);
+
+    const size_t capacity_before = dds_vector_get_capacity(&vector);
+    dds_vector_clear(&vector);
+
+    TEST_ASSERT_EQUAL_size_t(capacity_before, dds_vector_get_capacity(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_clear_should_allow_push_after_clear(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+    dds_vector_clear(&vector);
+
+    const int new_value = 99;
+    dds_vector_push_back(&vector, &new_value);
+
+    int out;
+    dds_vector_get(&vector, 0, &out);
+    TEST_ASSERT_EQUAL_INT(99, out);
+    TEST_ASSERT_EQUAL_size_t(1, dds_vector_get_size(&vector));
+    dds_vector_free(&vector);
+}
+
+void dds_vector_clear_should_return_invalid_parameter_when_vector_null(void) {
+    const dds_result_t result = dds_vector_clear(NULL);
+
+    TEST_ASSERT_EQUAL_INT(DDS_INVALID_PARAMETER, result);
+}
+
 /* dds_vector_reserve */
 
 void dds_vector_reserve_should_return_ok(void) {

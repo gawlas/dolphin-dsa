@@ -33,6 +33,14 @@ void dds_vector_free(dds_vector_t* vector) {
     memset(&vector->alloc, 0, sizeof(vector->alloc));
 }
 
+dds_result_t dds_vector_clear(dds_vector_t* vector) {
+    if (vector == NULL) return DDS_INVALID_PARAMETER;
+
+    vector->size = 0;
+
+    return DDS_OK;
+}
+
 dds_result_t dds_vector_reserve(dds_vector_t* vector, const size_t capacity) {
     if (vector == NULL) return DDS_INVALID_PARAMETER;
     if (capacity == 0) return DDS_INVALID_PARAMETER;
