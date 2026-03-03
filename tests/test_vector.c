@@ -493,6 +493,48 @@ void dds_vector_get_data_should_point_to_correct_values(void) {
     dds_vector_free(&vector);
 }
 
+/* dds_vector_is_empty */
+
+void dds_vector_is_empty_should_return_true_when_vector_null(void) {
+    TEST_ASSERT_TRUE(dds_vector_is_empty(NULL));
+}
+
+void dds_vector_is_empty_should_return_true_on_empty_vector(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    TEST_ASSERT_TRUE(dds_vector_is_empty(&vector));
+
+    dds_vector_free(&vector);
+}
+
+void dds_vector_is_empty_should_return_false_after_push(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    TEST_ASSERT_FALSE(dds_vector_is_empty(&vector));
+
+    dds_vector_free(&vector);
+}
+
+void dds_vector_is_empty_should_return_true_after_all_elements_popped(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
+
+    const int value = 1;
+    dds_vector_push_back(&vector, &value);
+
+    int out;
+    dds_vector_pop_back(&vector, &out);
+
+    TEST_ASSERT_TRUE(dds_vector_is_empty(&vector));
+
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_at */
 
 void dds_vector_at_should_return_null_when_vector_null(void) {

@@ -60,6 +60,12 @@ void dds_vector_get_data_should_return_null_on_empty_vector(void);
 void dds_vector_get_data_should_return_non_null_after_push(void);
 void dds_vector_get_data_should_point_to_correct_values(void);
 
+/* dds_vector_is_empty */
+void dds_vector_is_empty_should_return_true_when_vector_null(void);
+void dds_vector_is_empty_should_return_true_on_empty_vector(void);
+void dds_vector_is_empty_should_return_false_after_push(void);
+void dds_vector_is_empty_should_return_true_after_all_elements_popped(void);
+
 /* dds_vector_at */
 void dds_vector_at_should_return_null_when_vector_null(void);
 void dds_vector_at_should_return_null_on_empty_vector(void);
@@ -128,6 +134,11 @@ int main(void) {
     RUN_TEST(dds_vector_get_data_should_return_null_on_empty_vector);
     RUN_TEST(dds_vector_get_data_should_return_non_null_after_push);
     RUN_TEST(dds_vector_get_data_should_point_to_correct_values);
+
+    RUN_TEST(dds_vector_is_empty_should_return_true_when_vector_null);
+    RUN_TEST(dds_vector_is_empty_should_return_true_on_empty_vector);
+    RUN_TEST(dds_vector_is_empty_should_return_false_after_push);
+    RUN_TEST(dds_vector_is_empty_should_return_true_after_all_elements_popped);
 
     RUN_TEST(dds_vector_at_should_return_null_when_vector_null);
     RUN_TEST(dds_vector_at_should_return_null_on_empty_vector);

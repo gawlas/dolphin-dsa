@@ -1,6 +1,8 @@
 #ifndef DOLPHIN_DSA_VECTOR_H
 #define DOLPHIN_DSA_VECTOR_H
 
+#include <stdbool.h>
+
 #include "alloc.h"
 #include "types.h"
 
@@ -147,5 +149,13 @@ size_t dds_vector_get_capacity(const dds_vector_t* vector);
  * @return Pointer to the raw data buffer, or NULL if the vector is NULL or empty.
  */
 void* dds_vector_get_data(const dds_vector_t* vector);
+
+/**
+ * Check whether the vector contains no elements.
+ *
+ * @param vector Pointer to an initialized vector.
+ * @return true if the vector is empty or NULL, false otherwise.
+ */
+bool dds_vector_is_empty(const dds_vector_t* vector);
 
 #endif //DOLPHIN_DSA_VECTOR_H

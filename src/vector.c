@@ -139,3 +139,9 @@ void* dds_vector_get_data(const dds_vector_t* vector) {
 
     return vector->data;
 }
+
+bool dds_vector_is_empty(const dds_vector_t* vector) {
+    if (vector == NULL) return true;
+
+    return vector->size == 0;
+}
