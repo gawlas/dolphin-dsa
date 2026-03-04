@@ -1,22 +1,20 @@
 #ifndef DOLPHIN_DSA_VECTOR_H
 #define DOLPHIN_DSA_VECTOR_H
 
+#include <assert.h>
 #include <stdbool.h>
 
 #include "alloc.h"
 #include "types.h"
-
-/** Initial capacity allocated on first push. */
-#define INITIAL_SIZE 1
-
-/** Capacity multiplier applied on each resize. */
-#define GROWTH_FACTOR 2
 
 /**
  * Dynamic array of fixed-size elements.
  *
  * Must be initialized with dds_vector_init() before use
  * and released with dds_vector_free() when no longer needed.
+ *
+ * @note Not thread-safe. External synchronization is required
+ *       when a vector instance is shared across threads.
  */
 typedef struct dds_vector {
     void*        data;         /**< Pointer to the element buffer. */
@@ -180,7 +178,11 @@ void* dds_vector_at(const dds_vector_t* vector, size_t index);
  * @param Type   Element type.
  * @param index  Zero-based index of the element.
  */
-#define dds_vector_index(vector, Type, index) (((Type*)(vector)->data)[(index)])
+/* TODO: replace assert with internal DDS_ASSERT mechanism that is independent
+ *       of NDEBUG and controlled by a dedicated DDS_DEBUG flag. */
+#define dds_vector_index(vector, Type, index) \
+    (assert((vector) != NULL && (index) < (vector)->size), \
+     ((Type*)(vector)->data)[(index)])
 
 /**
  * Return the number of elements currently stored in the vector.
@@ -202,10 +204,10 @@ size_t dds_vector_get_capacity(const dds_vector_t* vector);
  * Return a pointer to the vector's internal data buffer.
  *
  * The pointer is valid until the next operation that modifies the vector.
- * Returns NULL if the vector is NULL or has never had any elements pushed.
  *
  * @param vector Pointer to an initialized vector.
- * @return Pointer to the raw data buffer, or NULL if the vector is NULL or empty.
+ * @return Pointer to the raw data buffer, or NULL if the vector is NULL or
+ *         the internal buffer has not been allocated yet.
  */
 void* dds_vector_get_data(const dds_vector_t* vector);
 

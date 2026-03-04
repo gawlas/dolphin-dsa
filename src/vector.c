@@ -3,6 +3,33 @@
 #include "dds/vector.h"
 #include "dds/types.h"
 
+/** Initial capacity allocated on first push. */
+#define DDS_INITIAL_SIZE 1
+
+/** Capacity multiplier applied on each resize. */
+#define DDS_GROWTH_FACTOR 2
+
+static dds_result_t grow_if_needed(dds_vector_t* vector) {
+    if (vector->size >= vector->capacity) {
+        if (vector->capacity > SIZE_MAX / DDS_GROWTH_FACTOR) return DDS_OVERFLOW;
+        const size_t new_capacity = (vector->capacity == 0) ? DDS_INITIAL_SIZE : vector->capacity * DDS_GROWTH_FACTOR;
+
+        if (new_capacity > SIZE_MAX / vector->element_size) return DDS_OVERFLOW;
+        const size_t new_buffer_size = new_capacity * vector->element_size;
+
+        void* new_buffer = vector->alloc.realloc(vector->alloc.context, vector->data, new_buffer_size);
+
+        // if realloc fail, return error
+        if (new_buffer == NULL) return DDS_OUT_OF_MEMORY;
+
+        // update buffer
+        vector->data = new_buffer;
+        vector->capacity = new_capacity;
+    }
+
+    return DDS_OK;
+}
+
 dds_result_t dds_vector_init(dds_vector_t* vector, size_t element_size, dds_alloc_t alloc) {
     if (vector == NULL) return DDS_INVALID_PARAMETER;
     if (element_size == 0) return DDS_INVALID_PARAMETER;
@@ -94,22 +121,8 @@ dds_result_t dds_vector_push_back(dds_vector_t* vector, const void* element) {
     if (element == NULL) return DDS_INVALID_PARAMETER;
 
     // resize data buffer when full
-    if (vector->size >= vector->capacity) {
-        if (vector->capacity > SIZE_MAX / GROWTH_FACTOR) return DDS_OVERFLOW;
-        const size_t new_capacity = (vector->capacity == 0) ? INITIAL_SIZE : vector->capacity * GROWTH_FACTOR;
-
-        if (new_capacity > SIZE_MAX / vector->element_size) return DDS_OVERFLOW;
-        const size_t new_buffer_size = new_capacity * vector->element_size;
-
-        void* new_buffer = vector->alloc.realloc(vector->alloc.context, vector->data, new_buffer_size);
-
-        // if realloc fail, return error
-        if (new_buffer == NULL) return DDS_OUT_OF_MEMORY;
-
-        // update buffer
-        vector->data = new_buffer;
-        vector->capacity = new_capacity;
-    }
+    const dds_result_t result = grow_if_needed(vector);
+    if (result != DDS_OK) return result;
 
     // calculate destination for a new element
     void* destination = (char*)vector->data + (vector->size * vector->element_size);
@@ -129,22 +142,8 @@ dds_result_t dds_vector_insert(dds_vector_t* vector, const size_t index, const v
     if (index > vector->size) return DDS_OUT_OF_RANGE;
 
     // resize data buffer when full
-    if (vector->size >= vector->capacity) {
-        if (vector->capacity > SIZE_MAX / GROWTH_FACTOR) return DDS_OVERFLOW;
-        const size_t new_capacity = (vector->capacity == 0) ? INITIAL_SIZE : vector->capacity * GROWTH_FACTOR;
-
-        if (new_capacity > SIZE_MAX / vector->element_size) return DDS_OVERFLOW;
-        const size_t new_buffer_size = new_capacity * vector->element_size;
-
-        void* new_buffer = vector->alloc.realloc(vector->alloc.context, vector->data, new_buffer_size);
-
-        // if realloc fail, return error
-        if (new_buffer == NULL) return DDS_OUT_OF_MEMORY;
-
-        // update buffer
-        vector->data = new_buffer;
-        vector->capacity = new_capacity;
-    }
+    const dds_result_t result = grow_if_needed(vector);
+    if (result != DDS_OK) return result;
 
     // move vector elements to make a space for new element
     void* source = (char*)vector->data + (index * vector->element_size);
