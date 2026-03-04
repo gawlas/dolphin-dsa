@@ -172,7 +172,8 @@ void* dds_vector_at(const dds_vector_t* vector, size_t index);
  * Return a typed pointer to the element at the given index.
  *
  * Convenience macro that avoids manual casting.
- * No bounds checking is performed.
+ * Bounds and NULL checking is performed via assert, which is disabled
+ * when compiled with NDEBUG.
  *
  * @param vector Pointer to an initialized vector.
  * @param Type   Element type.
