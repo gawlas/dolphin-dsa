@@ -3,12 +3,6 @@
 #include "dds/vector.h"
 #include "dds/types.h"
 
-/** Initial capacity allocated on first push. */
-#define DDS_INITIAL_SIZE 1
-
-/** Capacity multiplier applied on each resize. */
-#define DDS_GROWTH_FACTOR 2
-
 static dds_result_t grow_if_needed(dds_vector_t* vector) {
     if (vector->size >= vector->capacity) {
         if (vector->capacity > SIZE_MAX / DDS_GROWTH_FACTOR) return DDS_OVERFLOW;

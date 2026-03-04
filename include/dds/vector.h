@@ -7,6 +7,13 @@
 #include "alloc.h"
 #include "types.h"
 
+/** Initial capacity allocated on first push. */
+#define DDS_INITIAL_SIZE 1
+
+/** Capacity multiplier applied on each resize. */
+#define DDS_GROWTH_FACTOR 2
+
+
 /**
  * Dynamic array of fixed-size elements.
  *
@@ -172,18 +179,13 @@ void* dds_vector_at(const dds_vector_t* vector, size_t index);
  * Return a typed pointer to the element at the given index.
  *
  * Convenience macro that avoids manual casting.
- * Bounds and NULL checking is performed via assert, which is disabled
- * when compiled with NDEBUG.
+ * No bounds checking is performed.
  *
  * @param vector Pointer to an initialized vector.
  * @param Type   Element type.
  * @param index  Zero-based index of the element.
  */
-/* TODO: replace assert with internal DDS_ASSERT mechanism that is independent
- *       of NDEBUG and controlled by a dedicated DDS_DEBUG flag. */
-#define dds_vector_index(vector, Type, index) \
-    (assert((vector) != NULL && (index) < (vector)->size), \
-     ((Type*)(vector)->data)[(index)])
+#define dds_vector_index(vector, Type, index) (((Type*)(vector)->data)[(index)])
 
 /**
  * Return the number of elements currently stored in the vector.

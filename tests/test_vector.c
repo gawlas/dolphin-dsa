@@ -357,10 +357,10 @@ void dds_vector_push_back_should_grow_capacity(void) {
     dds_vector_t vector;
     dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
 
-    /* push INITIAL_SIZE + 1 elements to trigger a resize */
-    for (int i = 0; i <= INITIAL_SIZE; i++) dds_vector_push_back(&vector, &i);
+    /* push DDS_INITIAL_SIZE + 1 elements to trigger a resize */
+    for (int i = 0; i <= DDS_INITIAL_SIZE; i++) dds_vector_push_back(&vector, &i);
 
-    TEST_ASSERT_TRUE(vector.capacity > INITIAL_SIZE);
+    TEST_ASSERT_TRUE(vector.capacity > DDS_INITIAL_SIZE);
     dds_vector_free(&vector);
 }
 
@@ -368,8 +368,8 @@ void dds_vector_push_back_should_return_overflow_when_capacity_overflows(void) {
     dds_vector_t vector;
     dds_vector_init(&vector, sizeof(int), dds_alloc_stdlib());
 
-    /* set capacity just above SIZE_MAX / GROWTH_FACTOR so capacity * GROWTH_FACTOR wraps */
-    vector.capacity = SIZE_MAX / GROWTH_FACTOR + 1;
+    /* set capacity just above SIZE_MAX / DDS_GROWTH_FACTOR so capacity * GROWTH_FACTOR wraps */
+    vector.capacity = SIZE_MAX / DDS_GROWTH_FACTOR + 1;
     vector.size = vector.capacity;
 
     const int value = 1;
