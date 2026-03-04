@@ -187,6 +187,10 @@ dds_result_t dds_vector_pop_back(dds_vector_t* vector, void* element) {
     if (element != NULL) {
         const void* source = (char*)vector->data + ((vector->size - 1) * vector->element_size);
         memcpy(element, source, vector->element_size);
+    }// if the element is not NULL, copy the last element from vector to it, otherwise discard
+    if (element != NULL) {
+        const void* source = (char*)vector->data + ((vector->size - 1) * vector->element_size);
+        memcpy(element, source, vector->element_size);
     }
 
     vector->size--;
