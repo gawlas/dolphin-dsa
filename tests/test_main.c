@@ -27,6 +27,7 @@ void dds_linked_list_push_back_should_return_invalid_parameter_when_list_null(vo
 void dds_linked_list_push_back_should_return_invalid_parameter_when_element_null(void);
 void dds_linked_list_push_back_should_increase_size(void);
 void dds_linked_list_push_back_should_store_correct_values(void);
+void dds_linked_list_push_back_should_store_struct(void);
 
 /* dds_linked_list_push_front */
 void dds_linked_list_push_front_should_return_ok(void);
@@ -34,6 +35,7 @@ void dds_linked_list_push_front_should_return_invalid_parameter_when_list_null(v
 void dds_linked_list_push_front_should_return_invalid_parameter_when_element_null(void);
 void dds_linked_list_push_front_should_increase_size(void);
 void dds_linked_list_push_front_should_store_correct_values(void);
+void dds_linked_list_push_front_should_store_struct(void);
 
 /* dds_linked_list_pop_back */
 void dds_linked_list_pop_back_should_return_ok(void);
@@ -44,6 +46,7 @@ void dds_linked_list_pop_back_should_decrease_size(void);
 void dds_linked_list_pop_back_should_discard_when_element_null(void);
 void dds_linked_list_pop_back_should_return_elements_in_lifo_order(void);
 void dds_linked_list_pop_back_should_leave_empty_list_consistent(void);
+void dds_linked_list_pop_back_should_return_struct(void);
 
 /* dds_linked_list_pop_front */
 void dds_linked_list_pop_front_should_return_ok(void);
@@ -54,6 +57,7 @@ void dds_linked_list_pop_front_should_decrease_size(void);
 void dds_linked_list_pop_front_should_discard_when_element_null(void);
 void dds_linked_list_pop_front_should_return_elements_in_fifo_order(void);
 void dds_linked_list_pop_front_should_leave_empty_list_consistent(void);
+void dds_linked_list_pop_front_should_return_struct(void);
 
 /* dds_linked_list_get */
 void dds_linked_list_get_should_return_ok(void);
@@ -63,6 +67,7 @@ void dds_linked_list_get_should_return_out_of_range_when_index_exceeds_size(void
 void dds_linked_list_get_should_return_out_of_range_when_empty(void);
 void dds_linked_list_get_should_return_correct_values(void);
 void dds_linked_list_get_should_not_modify_list(void);
+void dds_linked_list_get_should_return_struct(void);
 
 /* dds_linked_list_set */
 void dds_linked_list_set_should_return_ok(void);
@@ -71,6 +76,7 @@ void dds_linked_list_set_should_return_invalid_parameter_when_element_null(void)
 void dds_linked_list_set_should_return_out_of_range_when_index_exceeds_size(void);
 void dds_linked_list_set_should_update_value(void);
 void dds_linked_list_set_should_not_change_size(void);
+void dds_linked_list_set_should_store_struct(void);
 
 /* dds_linked_list_insert */
 void dds_linked_list_insert_should_return_ok(void);
@@ -82,6 +88,7 @@ void dds_linked_list_insert_should_place_element_at_index(void);
 void dds_linked_list_insert_at_zero_should_prepend(void);
 void dds_linked_list_insert_at_size_should_append(void);
 void dds_linked_list_insert_on_empty_list_should_work(void);
+void dds_linked_list_insert_should_store_struct(void);
 
 /* dds_linked_list_remove */
 void dds_linked_list_remove_should_return_ok(void);
@@ -93,6 +100,7 @@ void dds_linked_list_remove_should_decrease_size(void);
 void dds_linked_list_remove_should_discard_when_element_null(void);
 void dds_linked_list_remove_should_shift_remaining_elements(void);
 void dds_linked_list_remove_should_leave_empty_list_consistent(void);
+void dds_linked_list_remove_should_return_struct(void);
 
 /* dds_linked_list_get_size */
 void dds_linked_list_get_size_should_return_zero_when_list_null(void);
@@ -148,6 +156,7 @@ void dds_vector_push_back_should_store_correct_values(void);
 void dds_vector_push_back_should_grow_capacity(void);
 void dds_vector_push_back_should_return_overflow_when_capacity_overflows(void);
 void dds_vector_push_back_should_return_overflow_when_buffer_size_overflows(void);
+void dds_vector_push_back_should_store_struct(void);
 
 /* dds_vector_insert */
 void dds_vector_insert_should_return_ok(void);
@@ -158,6 +167,7 @@ void dds_vector_insert_at_end_should_append(void);
 void dds_vector_insert_should_return_invalid_parameter_when_vector_null(void);
 void dds_vector_insert_should_return_invalid_parameter_when_element_null(void);
 void dds_vector_insert_should_return_out_of_range_when_index_exceeds_size(void);
+void dds_vector_insert_should_store_struct(void);
 
 /* dds_vector_remove */
 void dds_vector_remove_should_return_ok(void);
@@ -169,6 +179,7 @@ void dds_vector_remove_should_discard_when_element_null(void);
 void dds_vector_remove_should_return_invalid_parameter_when_vector_null(void);
 void dds_vector_remove_should_return_out_of_range_when_index_exceeds_size(void);
 void dds_vector_remove_should_return_out_of_range_on_empty_vector(void);
+void dds_vector_remove_should_return_struct(void);
 
 /* dds_vector_pop_back */
 void dds_vector_pop_back_should_return_ok(void);
@@ -179,6 +190,7 @@ void dds_vector_pop_back_should_return_elements_in_lifo_order(void);
 void dds_vector_pop_back_should_discard_when_element_null(void);
 void dds_vector_pop_back_should_return_invalid_parameter_when_vector_null(void);
 void dds_vector_pop_back_should_return_out_of_range_when_empty(void);
+void dds_vector_pop_back_should_return_struct(void);
 
 /* dds_vector_get */
 void dds_vector_get_should_return_ok(void);
@@ -186,6 +198,7 @@ void dds_vector_get_should_return_invalid_parameter_when_vector_null(void);
 void dds_vector_get_should_return_invalid_parameter_when_element_null(void);
 void dds_vector_get_should_return_out_of_range_when_index_exceeds_size(void);
 void dds_vector_get_should_return_out_of_range_on_empty_vector(void);
+void dds_vector_get_should_return_struct(void);
 
 /* dds_vector_get_size */
 void dds_vector_get_size_should_return_zero_when_vector_null(void);
@@ -215,11 +228,13 @@ void dds_vector_at_should_return_null_on_empty_vector(void);
 void dds_vector_at_should_return_null_when_index_out_of_bounds(void);
 void dds_vector_at_should_return_correct_value(void);
 void dds_vector_at_should_allow_mutation(void);
+void dds_vector_at_should_return_pointer_to_struct(void);
 
 /* dds_vector_index */
 void dds_vector_index_should_return_correct_value(void);
 void dds_vector_index_should_allow_mutation(void);
 void dds_vector_index_local_copy_should_not_affect_vector(void);
+void dds_vector_index_should_return_struct(void);
 
 void setUp(void) {}
 void tearDown(void) {}
@@ -250,12 +265,14 @@ int main(void) {
     RUN_TEST(dds_linked_list_push_back_should_return_invalid_parameter_when_element_null);
     RUN_TEST(dds_linked_list_push_back_should_increase_size);
     RUN_TEST(dds_linked_list_push_back_should_store_correct_values);
+    RUN_TEST(dds_linked_list_push_back_should_store_struct);
 
     RUN_TEST(dds_linked_list_push_front_should_return_ok);
     RUN_TEST(dds_linked_list_push_front_should_return_invalid_parameter_when_list_null);
     RUN_TEST(dds_linked_list_push_front_should_return_invalid_parameter_when_element_null);
     RUN_TEST(dds_linked_list_push_front_should_increase_size);
     RUN_TEST(dds_linked_list_push_front_should_store_correct_values);
+    RUN_TEST(dds_linked_list_push_front_should_store_struct);
 
     RUN_TEST(dds_linked_list_pop_back_should_return_ok);
     RUN_TEST(dds_linked_list_pop_back_should_return_invalid_parameter_when_list_null);
@@ -265,6 +282,7 @@ int main(void) {
     RUN_TEST(dds_linked_list_pop_back_should_discard_when_element_null);
     RUN_TEST(dds_linked_list_pop_back_should_return_elements_in_lifo_order);
     RUN_TEST(dds_linked_list_pop_back_should_leave_empty_list_consistent);
+    RUN_TEST(dds_linked_list_pop_back_should_return_struct);
 
     RUN_TEST(dds_linked_list_pop_front_should_return_ok);
     RUN_TEST(dds_linked_list_pop_front_should_return_invalid_parameter_when_list_null);
@@ -274,6 +292,7 @@ int main(void) {
     RUN_TEST(dds_linked_list_pop_front_should_discard_when_element_null);
     RUN_TEST(dds_linked_list_pop_front_should_return_elements_in_fifo_order);
     RUN_TEST(dds_linked_list_pop_front_should_leave_empty_list_consistent);
+    RUN_TEST(dds_linked_list_pop_front_should_return_struct);
 
     RUN_TEST(dds_linked_list_get_should_return_ok);
     RUN_TEST(dds_linked_list_get_should_return_invalid_parameter_when_list_null);
@@ -282,6 +301,7 @@ int main(void) {
     RUN_TEST(dds_linked_list_get_should_return_out_of_range_when_empty);
     RUN_TEST(dds_linked_list_get_should_return_correct_values);
     RUN_TEST(dds_linked_list_get_should_not_modify_list);
+    RUN_TEST(dds_linked_list_get_should_return_struct);
 
     RUN_TEST(dds_linked_list_set_should_return_ok);
     RUN_TEST(dds_linked_list_set_should_return_invalid_parameter_when_list_null);
@@ -289,6 +309,7 @@ int main(void) {
     RUN_TEST(dds_linked_list_set_should_return_out_of_range_when_index_exceeds_size);
     RUN_TEST(dds_linked_list_set_should_update_value);
     RUN_TEST(dds_linked_list_set_should_not_change_size);
+    RUN_TEST(dds_linked_list_set_should_store_struct);
 
     RUN_TEST(dds_linked_list_insert_should_return_ok);
     RUN_TEST(dds_linked_list_insert_should_return_invalid_parameter_when_list_null);
@@ -299,6 +320,7 @@ int main(void) {
     RUN_TEST(dds_linked_list_insert_at_zero_should_prepend);
     RUN_TEST(dds_linked_list_insert_at_size_should_append);
     RUN_TEST(dds_linked_list_insert_on_empty_list_should_work);
+    RUN_TEST(dds_linked_list_insert_should_store_struct);
 
     RUN_TEST(dds_linked_list_remove_should_return_ok);
     RUN_TEST(dds_linked_list_remove_should_return_invalid_parameter_when_list_null);
@@ -309,6 +331,7 @@ int main(void) {
     RUN_TEST(dds_linked_list_remove_should_discard_when_element_null);
     RUN_TEST(dds_linked_list_remove_should_shift_remaining_elements);
     RUN_TEST(dds_linked_list_remove_should_leave_empty_list_consistent);
+    RUN_TEST(dds_linked_list_remove_should_return_struct);
 
     RUN_TEST(dds_linked_list_get_size_should_return_zero_when_list_null);
     RUN_TEST(dds_linked_list_get_size_should_return_zero_on_empty_list);
@@ -356,6 +379,7 @@ int main(void) {
     RUN_TEST(dds_vector_push_back_should_grow_capacity);
     RUN_TEST(dds_vector_push_back_should_return_overflow_when_capacity_overflows);
     RUN_TEST(dds_vector_push_back_should_return_overflow_when_buffer_size_overflows);
+    RUN_TEST(dds_vector_push_back_should_store_struct);
 
     RUN_TEST(dds_vector_insert_should_return_ok);
     RUN_TEST(dds_vector_insert_should_increase_size);
@@ -365,6 +389,7 @@ int main(void) {
     RUN_TEST(dds_vector_insert_should_return_invalid_parameter_when_vector_null);
     RUN_TEST(dds_vector_insert_should_return_invalid_parameter_when_element_null);
     RUN_TEST(dds_vector_insert_should_return_out_of_range_when_index_exceeds_size);
+    RUN_TEST(dds_vector_insert_should_store_struct);
 
     RUN_TEST(dds_vector_remove_should_return_ok);
     RUN_TEST(dds_vector_remove_should_return_correct_element);
@@ -375,6 +400,7 @@ int main(void) {
     RUN_TEST(dds_vector_remove_should_return_invalid_parameter_when_vector_null);
     RUN_TEST(dds_vector_remove_should_return_out_of_range_when_index_exceeds_size);
     RUN_TEST(dds_vector_remove_should_return_out_of_range_on_empty_vector);
+    RUN_TEST(dds_vector_remove_should_return_struct);
 
     RUN_TEST(dds_vector_pop_back_should_return_ok);
     RUN_TEST(dds_vector_pop_back_should_return_correct_element);
@@ -384,12 +410,14 @@ int main(void) {
     RUN_TEST(dds_vector_pop_back_should_discard_when_element_null);
     RUN_TEST(dds_vector_pop_back_should_return_invalid_parameter_when_vector_null);
     RUN_TEST(dds_vector_pop_back_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_vector_pop_back_should_return_struct);
 
     RUN_TEST(dds_vector_get_should_return_ok);
     RUN_TEST(dds_vector_get_should_return_invalid_parameter_when_vector_null);
     RUN_TEST(dds_vector_get_should_return_invalid_parameter_when_element_null);
     RUN_TEST(dds_vector_get_should_return_out_of_range_when_index_exceeds_size);
     RUN_TEST(dds_vector_get_should_return_out_of_range_on_empty_vector);
+    RUN_TEST(dds_vector_get_should_return_struct);
 
     RUN_TEST(dds_vector_get_size_should_return_zero_when_vector_null);
     RUN_TEST(dds_vector_get_size_should_return_zero_on_empty_vector);
@@ -414,10 +442,12 @@ int main(void) {
     RUN_TEST(dds_vector_at_should_return_null_when_index_out_of_bounds);
     RUN_TEST(dds_vector_at_should_return_correct_value);
     RUN_TEST(dds_vector_at_should_allow_mutation);
+    RUN_TEST(dds_vector_at_should_return_pointer_to_struct);
 
     RUN_TEST(dds_vector_index_should_return_correct_value);
     RUN_TEST(dds_vector_index_should_allow_mutation);
     RUN_TEST(dds_vector_index_local_copy_should_not_affect_vector);
+    RUN_TEST(dds_vector_index_should_return_struct);
 
     return UNITY_END();
 }

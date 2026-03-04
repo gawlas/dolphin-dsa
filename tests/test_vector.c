@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include "dds/vector.h"
 #include "unity.h"
+#include "test_structs.h"
 
 void dds_vector_init_should_return_ok(void) {
     dds_vector_t vector;
@@ -401,6 +402,20 @@ void dds_vector_push_back_should_return_overflow_when_buffer_size_overflows(void
     dds_vector_free(&vector);
 }
 
+void dds_vector_push_back_should_store_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(1, "Alice", 3.14);
+    dds_vector_push_back(&vector, &r);
+
+    test_record_t out;
+    dds_vector_get(&vector, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_insert */
 
 void dds_vector_insert_should_return_ok(void) {
@@ -511,6 +526,25 @@ void dds_vector_insert_should_return_out_of_range_when_index_exceeds_size(void) 
     const dds_result_t result = dds_vector_insert(&vector, 2, &insert);
 
     TEST_ASSERT_EQUAL_INT(DDS_OUT_OF_RANGE, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_insert_should_store_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r0 = make_record(0, "Zero", 0.0);
+    test_record_t r1 = make_record(1, "One",  1.0);
+    test_record_t r2 = make_record(2, "Two",  2.0);
+    dds_vector_push_back(&vector, &r0);
+    dds_vector_push_back(&vector, &r2);
+    dds_vector_insert(&vector, 1, &r1);
+
+    test_record_t out;
+    dds_vector_get(&vector, 0, &out); TEST_ASSERT_TRUE(records_equal(&r0, &out));
+    dds_vector_get(&vector, 1, &out); TEST_ASSERT_TRUE(records_equal(&r1, &out));
+    dds_vector_get(&vector, 2, &out); TEST_ASSERT_TRUE(records_equal(&r2, &out));
+
     dds_vector_free(&vector);
 }
 
@@ -632,6 +666,20 @@ void dds_vector_remove_should_return_out_of_range_on_empty_vector(void) {
     dds_vector_free(&vector);
 }
 
+void dds_vector_remove_should_return_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(42, "Bob", 2.71);
+    dds_vector_push_back(&vector, &r);
+
+    test_record_t out;
+    dds_vector_remove(&vector, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_pop_back */
 
 void dds_vector_pop_back_should_return_ok(void) {
@@ -741,6 +789,20 @@ void dds_vector_pop_back_should_return_out_of_range_when_empty(void) {
     dds_vector_free(&vector);
 }
 
+void dds_vector_pop_back_should_return_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(7, "Carol", 1.41);
+    dds_vector_push_back(&vector, &r);
+
+    test_record_t out;
+    dds_vector_pop_back(&vector, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_get */
 
 void dds_vector_get_should_return_ok(void) {
@@ -800,6 +862,20 @@ void dds_vector_get_should_return_out_of_range_on_empty_vector(void) {
     const dds_result_t result = dds_vector_get(&vector, 0, &out);
 
     TEST_ASSERT_EQUAL_INT(DDS_OUT_OF_RANGE, result);
+    dds_vector_free(&vector);
+}
+
+void dds_vector_get_should_return_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(3, "Dave", 9.99);
+    dds_vector_push_back(&vector, &r);
+
+    test_record_t out;
+    dds_vector_get(&vector, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
     dds_vector_free(&vector);
 }
 
@@ -998,6 +1074,20 @@ void dds_vector_at_should_allow_mutation(void) {
     dds_vector_free(&vector);
 }
 
+void dds_vector_at_should_return_pointer_to_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(5, "Eve", 2.22);
+    dds_vector_push_back(&vector, &r);
+
+    test_record_t* ptr = (test_record_t*)dds_vector_at(&vector, 0);
+    TEST_ASSERT_NOT_NULL(ptr);
+    TEST_ASSERT_TRUE(records_equal(&r, ptr));
+
+    dds_vector_free(&vector);
+}
+
 /* dds_vector_index */
 
 void dds_vector_index_should_return_correct_value(void) {
@@ -1044,6 +1134,19 @@ void dds_vector_index_local_copy_should_not_affect_vector(void) {
     int out;
     dds_vector_get(&vector, 0, &out);
     TEST_ASSERT_EQUAL_INT(42, out);
+
+    dds_vector_free(&vector);
+}
+
+void dds_vector_index_should_return_struct(void) {
+    dds_vector_t vector;
+    dds_vector_init(&vector, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(9, "Frank", 5.55);
+    dds_vector_push_back(&vector, &r);
+
+    test_record_t got = dds_vector_index(&vector, test_record_t, 0);
+    TEST_ASSERT_TRUE(records_equal(&r, &got));
 
     dds_vector_free(&vector);
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "dds/linked_list.h"
 #include "unity.h"
+#include "test_structs.h"
 
 static void* counting_malloc(void* ctx, size_t size) {
     (*(int*)ctx)++;
@@ -253,6 +254,20 @@ void dds_linked_list_push_back_should_store_correct_values(void) {
     dds_linked_list_free(&list);
 }
 
+void dds_linked_list_push_back_should_store_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(1, "Alice", 3.14);
+    dds_linked_list_push_back(&list, &r);
+
+    test_record_t out;
+    dds_linked_list_get(&list, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_linked_list_free(&list);
+}
+
 /* dds_linked_list_push_front */
 
 void dds_linked_list_push_front_should_return_ok(void) {
@@ -307,6 +322,22 @@ void dds_linked_list_push_front_should_store_correct_values(void) {
     dds_linked_list_get(&list, 0, &out); TEST_ASSERT_EQUAL_INT(30, out);
     dds_linked_list_get(&list, 1, &out); TEST_ASSERT_EQUAL_INT(20, out);
     dds_linked_list_get(&list, 2, &out); TEST_ASSERT_EQUAL_INT(10, out);
+
+    dds_linked_list_free(&list);
+}
+
+void dds_linked_list_push_front_should_store_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r0 = make_record(0, "Zero", 0.0);
+    test_record_t r1 = make_record(1, "One",  1.0);
+    dds_linked_list_push_back(&list, &r0);
+    dds_linked_list_push_front(&list, &r1);
+
+    test_record_t out;
+    dds_linked_list_get(&list, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r1, &out));
 
     dds_linked_list_free(&list);
 }
@@ -417,6 +448,20 @@ void dds_linked_list_pop_back_should_leave_empty_list_consistent(void) {
     dds_linked_list_free(&list);
 }
 
+void dds_linked_list_pop_back_should_return_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(42, "Bob", 2.71);
+    dds_linked_list_push_back(&list, &r);
+
+    test_record_t out;
+    dds_linked_list_pop_back(&list, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_linked_list_free(&list);
+}
+
 /* dds_linked_list_pop_front */
 
 void dds_linked_list_pop_front_should_return_ok(void) {
@@ -523,6 +568,20 @@ void dds_linked_list_pop_front_should_leave_empty_list_consistent(void) {
     dds_linked_list_free(&list);
 }
 
+void dds_linked_list_pop_front_should_return_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(7, "Carol", 1.41);
+    dds_linked_list_push_back(&list, &r);
+
+    test_record_t out;
+    dds_linked_list_pop_front(&list, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_linked_list_free(&list);
+}
+
 /* dds_linked_list_get */
 
 void dds_linked_list_get_should_return_ok(void) {
@@ -614,6 +673,20 @@ void dds_linked_list_get_should_not_modify_list(void) {
     dds_linked_list_free(&list);
 }
 
+void dds_linked_list_get_should_return_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(3, "Dave", 9.99);
+    dds_linked_list_push_back(&list, &r);
+
+    test_record_t out;
+    dds_linked_list_get(&list, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
+    dds_linked_list_free(&list);
+}
+
 /* dds_linked_list_set */
 
 void dds_linked_list_set_should_return_ok(void) {
@@ -693,6 +766,22 @@ void dds_linked_list_set_should_not_change_size(void) {
     dds_linked_list_set(&list, 0, &new_value);
 
     TEST_ASSERT_EQUAL_size_t(1, list.size);
+    dds_linked_list_free(&list);
+}
+
+void dds_linked_list_set_should_store_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r0 = make_record(0, "Old", 0.0);
+    test_record_t r1 = make_record(1, "New", 1.0);
+    dds_linked_list_push_back(&list, &r0);
+    dds_linked_list_set(&list, 0, &r1);
+
+    test_record_t out;
+    dds_linked_list_get(&list, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r1, &out));
+
     dds_linked_list_free(&list);
 }
 
@@ -823,6 +912,25 @@ void dds_linked_list_insert_on_empty_list_should_work(void) {
     dds_linked_list_free(&list);
 }
 
+void dds_linked_list_insert_should_store_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r0 = make_record(0, "Zero", 0.0);
+    test_record_t r1 = make_record(1, "One",  1.0);
+    test_record_t r2 = make_record(2, "Two",  2.0);
+    dds_linked_list_push_back(&list, &r0);
+    dds_linked_list_push_back(&list, &r2);
+    dds_linked_list_insert(&list, 1, &r1);
+
+    test_record_t out;
+    dds_linked_list_get(&list, 0, &out); TEST_ASSERT_TRUE(records_equal(&r0, &out));
+    dds_linked_list_get(&list, 1, &out); TEST_ASSERT_TRUE(records_equal(&r1, &out));
+    dds_linked_list_get(&list, 2, &out); TEST_ASSERT_TRUE(records_equal(&r2, &out));
+
+    dds_linked_list_free(&list);
+}
+
 /* dds_linked_list_remove */
 
 void dds_linked_list_remove_should_return_ok(void) {
@@ -939,6 +1047,20 @@ void dds_linked_list_remove_should_leave_empty_list_consistent(void) {
     TEST_ASSERT_NULL(list.head);
     TEST_ASSERT_NULL(list.tail);
     TEST_ASSERT_EQUAL_size_t(0, list.size);
+    dds_linked_list_free(&list);
+}
+
+void dds_linked_list_remove_should_return_struct(void) {
+    dds_linked_list_t list;
+    dds_linked_list_init(&list, sizeof(test_record_t), dds_alloc_stdlib());
+
+    test_record_t r = make_record(42, "Bob", 2.71);
+    dds_linked_list_push_back(&list, &r);
+
+    test_record_t out;
+    dds_linked_list_remove(&list, 0, &out);
+    TEST_ASSERT_TRUE(records_equal(&r, &out));
+
     dds_linked_list_free(&list);
 }
 
