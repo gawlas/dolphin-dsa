@@ -236,6 +236,133 @@ void dds_vector_index_should_allow_mutation(void);
 void dds_vector_index_local_copy_should_not_affect_vector(void);
 void dds_vector_index_should_return_struct(void);
 
+/* dds_ring_buffer_init */
+void dds_ring_buffer_init_should_return_ok(void);
+void dds_ring_buffer_init_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_init_should_return_invalid_parameter_when_element_size_zero(void);
+void dds_ring_buffer_init_should_return_invalid_parameter_when_alloc_invalid(void);
+void dds_ring_buffer_init_should_create_correct_structure(void);
+
+/* dds_ring_buffer_free */
+void dds_ring_buffer_free_should_not_crash_when_null(void);
+void dds_ring_buffer_free_should_zero_fields(void);
+void dds_ring_buffer_free_should_release_buffer(void);
+
+/* dds_ring_buffer_clear */
+void dds_ring_buffer_clear_should_return_ok(void);
+void dds_ring_buffer_clear_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_clear_should_reset_size_to_zero(void);
+void dds_ring_buffer_clear_should_reset_head_to_zero(void);
+void dds_ring_buffer_clear_should_preserve_capacity(void);
+void dds_ring_buffer_clear_should_preserve_element_size_and_alloc(void);
+void dds_ring_buffer_clear_should_allow_push_after_clear(void);
+
+/* dds_ring_buffer_reserve */
+void dds_ring_buffer_reserve_should_return_ok(void);
+void dds_ring_buffer_reserve_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_reserve_should_return_invalid_parameter_when_capacity_zero(void);
+void dds_ring_buffer_reserve_should_set_capacity(void);
+void dds_ring_buffer_reserve_should_not_change_size(void);
+void dds_ring_buffer_reserve_should_be_noop_when_capacity_already_sufficient(void);
+void dds_ring_buffer_reserve_should_preserve_elements(void);
+void dds_ring_buffer_reserve_should_preserve_elements_when_data_is_wrapped(void);
+void dds_ring_buffer_reserve_should_return_overflow_on_buffer_size_overflow(void);
+
+/* dds_ring_buffer_shrink_to_fit */
+void dds_ring_buffer_shrink_to_fit_should_return_ok(void);
+void dds_ring_buffer_shrink_to_fit_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_shrink_to_fit_should_set_capacity_to_size(void);
+void dds_ring_buffer_shrink_to_fit_should_not_change_size(void);
+void dds_ring_buffer_shrink_to_fit_should_preserve_elements(void);
+void dds_ring_buffer_shrink_to_fit_should_free_buffer_when_empty(void);
+void dds_ring_buffer_shrink_to_fit_should_be_noop_when_already_fitted(void);
+void dds_ring_buffer_shrink_to_fit_should_preserve_elements_when_data_is_wrapped(void);
+void dds_ring_buffer_shrink_to_fit_should_return_overflow_on_buffer_size_overflow(void);
+
+/* dds_ring_buffer_push_back */
+void dds_ring_buffer_push_back_should_return_ok(void);
+void dds_ring_buffer_push_back_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_push_back_should_return_invalid_parameter_when_element_null(void);
+void dds_ring_buffer_push_back_should_increase_size(void);
+void dds_ring_buffer_push_back_should_store_correct_values(void);
+void dds_ring_buffer_push_back_should_grow_capacity(void);
+void dds_ring_buffer_push_back_should_store_struct(void);
+void dds_ring_buffer_push_back_should_maintain_fifo_order_after_tail_wraps(void);
+
+/* dds_ring_buffer_push_front */
+void dds_ring_buffer_push_front_should_return_ok(void);
+void dds_ring_buffer_push_front_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_push_front_should_return_invalid_parameter_when_element_null(void);
+void dds_ring_buffer_push_front_should_increase_size(void);
+void dds_ring_buffer_push_front_should_store_correct_values(void);
+void dds_ring_buffer_push_front_should_store_struct(void);
+void dds_ring_buffer_push_front_should_wrap_head_backward(void);
+
+/* dds_ring_buffer_pop_back */
+void dds_ring_buffer_pop_back_should_return_ok(void);
+void dds_ring_buffer_pop_back_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_pop_back_should_return_out_of_range_when_empty(void);
+void dds_ring_buffer_pop_back_should_return_correct_element(void);
+void dds_ring_buffer_pop_back_should_decrease_size(void);
+void dds_ring_buffer_pop_back_should_discard_when_element_null(void);
+void dds_ring_buffer_pop_back_should_return_elements_in_lifo_order(void);
+void dds_ring_buffer_pop_back_should_leave_empty_ring_buffer_consistent(void);
+void dds_ring_buffer_pop_back_should_return_struct(void);
+
+/* dds_ring_buffer_pop_front */
+void dds_ring_buffer_pop_front_should_return_ok(void);
+void dds_ring_buffer_pop_front_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_pop_front_should_return_out_of_range_when_empty(void);
+void dds_ring_buffer_pop_front_should_return_correct_element(void);
+void dds_ring_buffer_pop_front_should_decrease_size(void);
+void dds_ring_buffer_pop_front_should_discard_when_element_null(void);
+void dds_ring_buffer_pop_front_should_return_elements_in_fifo_order(void);
+void dds_ring_buffer_pop_front_should_leave_empty_ring_buffer_consistent(void);
+void dds_ring_buffer_pop_front_should_return_struct(void);
+void dds_ring_buffer_should_behave_as_queue_with_interleaved_push_pop(void);
+
+/* dds_ring_buffer_peek_back */
+void dds_ring_buffer_peek_back_should_return_ok(void);
+void dds_ring_buffer_peek_back_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_peek_back_should_return_invalid_parameter_when_element_null(void);
+void dds_ring_buffer_peek_back_should_return_out_of_range_when_empty(void);
+void dds_ring_buffer_peek_back_should_return_correct_element(void);
+void dds_ring_buffer_peek_back_should_not_modify_ring_buffer(void);
+void dds_ring_buffer_peek_back_should_return_struct(void);
+void dds_ring_buffer_peek_back_should_return_correct_element_after_tail_wraps(void);
+
+/* dds_ring_buffer_peek_front */
+void dds_ring_buffer_peek_front_should_return_ok(void);
+void dds_ring_buffer_peek_front_should_return_invalid_parameter_when_ring_buffer_null(void);
+void dds_ring_buffer_peek_front_should_return_invalid_parameter_when_element_null(void);
+void dds_ring_buffer_peek_front_should_return_out_of_range_when_empty(void);
+void dds_ring_buffer_peek_front_should_return_correct_element(void);
+void dds_ring_buffer_peek_front_should_not_modify_ring_buffer(void);
+void dds_ring_buffer_peek_front_should_return_struct(void);
+void dds_ring_buffer_peek_front_should_return_correct_element_after_head_wraps(void);
+
+/* dds_ring_buffer_get_size */
+void dds_ring_buffer_get_size_should_return_zero_when_ring_buffer_null(void);
+void dds_ring_buffer_get_size_should_return_zero_on_empty_ring_buffer(void);
+void dds_ring_buffer_get_size_should_return_correct_size(void);
+void dds_ring_buffer_get_size_should_equal_capacity_when_full(void);
+
+/* dds_ring_buffer_get_capacity */
+void dds_ring_buffer_get_capacity_should_return_zero_when_ring_buffer_null(void);
+void dds_ring_buffer_get_capacity_should_return_zero_on_empty_ring_buffer(void);
+void dds_ring_buffer_get_capacity_should_return_at_least_size(void);
+
+/* dds_ring_buffer_get_data */
+void dds_ring_buffer_get_data_should_return_null_when_ring_buffer_null(void);
+void dds_ring_buffer_get_data_should_return_null_on_empty_ring_buffer(void);
+void dds_ring_buffer_get_data_should_return_non_null_after_push(void);
+
+/* dds_ring_buffer_is_empty */
+void dds_ring_buffer_is_empty_should_return_true_when_ring_buffer_null(void);
+void dds_ring_buffer_is_empty_should_return_true_on_empty_ring_buffer(void);
+void dds_ring_buffer_is_empty_should_return_false_after_push(void);
+void dds_ring_buffer_is_empty_should_return_true_after_all_elements_popped(void);
+
 void setUp(void) {}
 void tearDown(void) {}
 
@@ -448,6 +575,118 @@ int main(void) {
     RUN_TEST(dds_vector_index_should_allow_mutation);
     RUN_TEST(dds_vector_index_local_copy_should_not_affect_vector);
     RUN_TEST(dds_vector_index_should_return_struct);
+
+    RUN_TEST(dds_ring_buffer_init_should_return_ok);
+    RUN_TEST(dds_ring_buffer_init_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_init_should_return_invalid_parameter_when_element_size_zero);
+    RUN_TEST(dds_ring_buffer_init_should_return_invalid_parameter_when_alloc_invalid);
+    RUN_TEST(dds_ring_buffer_init_should_create_correct_structure);
+
+    RUN_TEST(dds_ring_buffer_free_should_not_crash_when_null);
+    RUN_TEST(dds_ring_buffer_free_should_zero_fields);
+    RUN_TEST(dds_ring_buffer_free_should_release_buffer);
+
+    RUN_TEST(dds_ring_buffer_clear_should_return_ok);
+    RUN_TEST(dds_ring_buffer_clear_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_clear_should_reset_size_to_zero);
+    RUN_TEST(dds_ring_buffer_clear_should_reset_head_to_zero);
+    RUN_TEST(dds_ring_buffer_clear_should_preserve_capacity);
+    RUN_TEST(dds_ring_buffer_clear_should_preserve_element_size_and_alloc);
+    RUN_TEST(dds_ring_buffer_clear_should_allow_push_after_clear);
+
+    RUN_TEST(dds_ring_buffer_reserve_should_return_ok);
+    RUN_TEST(dds_ring_buffer_reserve_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_reserve_should_return_invalid_parameter_when_capacity_zero);
+    RUN_TEST(dds_ring_buffer_reserve_should_set_capacity);
+    RUN_TEST(dds_ring_buffer_reserve_should_not_change_size);
+    RUN_TEST(dds_ring_buffer_reserve_should_be_noop_when_capacity_already_sufficient);
+    RUN_TEST(dds_ring_buffer_reserve_should_preserve_elements);
+    RUN_TEST(dds_ring_buffer_reserve_should_preserve_elements_when_data_is_wrapped);
+    RUN_TEST(dds_ring_buffer_reserve_should_return_overflow_on_buffer_size_overflow);
+
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_return_ok);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_set_capacity_to_size);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_not_change_size);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_preserve_elements);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_free_buffer_when_empty);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_be_noop_when_already_fitted);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_preserve_elements_when_data_is_wrapped);
+    RUN_TEST(dds_ring_buffer_shrink_to_fit_should_return_overflow_on_buffer_size_overflow);
+
+    RUN_TEST(dds_ring_buffer_push_back_should_return_ok);
+    RUN_TEST(dds_ring_buffer_push_back_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_push_back_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_ring_buffer_push_back_should_increase_size);
+    RUN_TEST(dds_ring_buffer_push_back_should_store_correct_values);
+    RUN_TEST(dds_ring_buffer_push_back_should_grow_capacity);
+    RUN_TEST(dds_ring_buffer_push_back_should_store_struct);
+    RUN_TEST(dds_ring_buffer_push_back_should_maintain_fifo_order_after_tail_wraps);
+
+    RUN_TEST(dds_ring_buffer_push_front_should_return_ok);
+    RUN_TEST(dds_ring_buffer_push_front_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_push_front_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_ring_buffer_push_front_should_increase_size);
+    RUN_TEST(dds_ring_buffer_push_front_should_store_correct_values);
+    RUN_TEST(dds_ring_buffer_push_front_should_store_struct);
+    RUN_TEST(dds_ring_buffer_push_front_should_wrap_head_backward);
+
+    RUN_TEST(dds_ring_buffer_pop_back_should_return_ok);
+    RUN_TEST(dds_ring_buffer_pop_back_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_pop_back_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_ring_buffer_pop_back_should_return_correct_element);
+    RUN_TEST(dds_ring_buffer_pop_back_should_decrease_size);
+    RUN_TEST(dds_ring_buffer_pop_back_should_discard_when_element_null);
+    RUN_TEST(dds_ring_buffer_pop_back_should_return_elements_in_lifo_order);
+    RUN_TEST(dds_ring_buffer_pop_back_should_leave_empty_ring_buffer_consistent);
+    RUN_TEST(dds_ring_buffer_pop_back_should_return_struct);
+
+    RUN_TEST(dds_ring_buffer_pop_front_should_return_ok);
+    RUN_TEST(dds_ring_buffer_pop_front_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_pop_front_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_ring_buffer_pop_front_should_return_correct_element);
+    RUN_TEST(dds_ring_buffer_pop_front_should_decrease_size);
+    RUN_TEST(dds_ring_buffer_pop_front_should_discard_when_element_null);
+    RUN_TEST(dds_ring_buffer_pop_front_should_return_elements_in_fifo_order);
+    RUN_TEST(dds_ring_buffer_pop_front_should_leave_empty_ring_buffer_consistent);
+    RUN_TEST(dds_ring_buffer_pop_front_should_return_struct);
+    RUN_TEST(dds_ring_buffer_should_behave_as_queue_with_interleaved_push_pop);
+
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_ok);
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_correct_element);
+    RUN_TEST(dds_ring_buffer_peek_back_should_not_modify_ring_buffer);
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_struct);
+    RUN_TEST(dds_ring_buffer_peek_back_should_return_correct_element_after_tail_wraps);
+
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_ok);
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_invalid_parameter_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_correct_element);
+    RUN_TEST(dds_ring_buffer_peek_front_should_not_modify_ring_buffer);
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_struct);
+    RUN_TEST(dds_ring_buffer_peek_front_should_return_correct_element_after_head_wraps);
+
+    RUN_TEST(dds_ring_buffer_get_size_should_return_zero_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_get_size_should_return_zero_on_empty_ring_buffer);
+    RUN_TEST(dds_ring_buffer_get_size_should_return_correct_size);
+    RUN_TEST(dds_ring_buffer_get_size_should_equal_capacity_when_full);
+
+    RUN_TEST(dds_ring_buffer_get_capacity_should_return_zero_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_get_capacity_should_return_zero_on_empty_ring_buffer);
+    RUN_TEST(dds_ring_buffer_get_capacity_should_return_at_least_size);
+
+    RUN_TEST(dds_ring_buffer_get_data_should_return_null_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_get_data_should_return_null_on_empty_ring_buffer);
+    RUN_TEST(dds_ring_buffer_get_data_should_return_non_null_after_push);
+
+    RUN_TEST(dds_ring_buffer_is_empty_should_return_true_when_ring_buffer_null);
+    RUN_TEST(dds_ring_buffer_is_empty_should_return_true_on_empty_ring_buffer);
+    RUN_TEST(dds_ring_buffer_is_empty_should_return_false_after_push);
+    RUN_TEST(dds_ring_buffer_is_empty_should_return_true_after_all_elements_popped);
 
     return UNITY_END();
 }
