@@ -4,6 +4,7 @@
 #include "alloc.h"
 #include "types.h"
 
+#include "hash_table.h"
 #include "linked_list.h"
 #include "queue.h"
 #include "ring_buffer.h"
