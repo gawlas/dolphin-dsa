@@ -27,3 +27,16 @@ dds_alloc_t dds_alloc_stdlib(void) {
 
     return alloc;
 }
+
+dds_destroy_t dds_destroy_none(void) {
+    return (dds_destroy_t){ NULL, NULL };
+}
+
+static void dds__stdlib_destroy(const void *data, void *context) {
+    (void) context;
+    free((void *) data);
+}
+
+dds_destroy_t dds_destroy_stdlib(void) {
+    return (dds_destroy_t){ dds__stdlib_destroy, NULL };
+}

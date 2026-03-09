@@ -54,9 +54,11 @@ typedef struct dds_hash_table_ref {
     void *states;                  /**< Flat array of slot states (EMPTY/OCCUPIED/DELETED). */
     size_t size;                   /**< Number of key-value pairs currently stored. */
     size_t capacity;               /**< Total number of slots allocated. */
-    dds_hash_fn_t hash_fn;         /**< Hash function provided at initialization. */
+    dds_hash_fn_t hash_fn;           /**< Hash function provided at initialization. */
     dds_key_equal_fn_t key_equal_fn; /**< Key equality function provided at initialization. */
-    dds_alloc_t alloc;             /**< Allocator used for all memory operations. */
+    dds_destroy_t key_destroy;   /**< Called when a key is removed or overwritten. */
+    dds_destroy_t value_destroy; /**< Called when a value is removed or overwritten. */
+    dds_alloc_t alloc;               /**< Allocator used for all memory operations. */
 } dds_hash_table_ref_t;
 
 /**
@@ -64,13 +66,16 @@ typedef struct dds_hash_table_ref {
  *
  * Must be called before any other operation on the table.
  *
- * @param table     Pointer to an uninitialized hash table.
- * @param hash      Hash function; must not be NULL.
- * @param key_equal Key equality function; must not be NULL.
- * @param alloc     Allocator to use; malloc and free must not be NULL.
+ * @param table         Pointer to an uninitialized hash table.
+ * @param hash          Hash function; must not be NULL.
+ * @param key_equal     Key equality function; must not be NULL.
+ * @param key_destroy   Destroy struct for keys; use dds_destroy_none() for no-op.
+ * @param value_destroy Destroy struct for values; use dds_destroy_none() for no-op.
+ * @param alloc         Allocator to use; malloc and free must not be NULL.
  * @return DDS_OK on success, DDS_INVALID_PARAMETER if any argument is NULL.
  */
 dds_result_t dds_hash_table_ref_init(dds_hash_table_ref_t *table, dds_hash_fn_t hash, dds_key_equal_fn_t key_equal,
+                                     dds_destroy_t key_destroy, dds_destroy_t value_destroy,
                                      dds_alloc_t alloc);
 
 /**
@@ -131,7 +136,8 @@ dds_result_t dds_hash_table_ref_get(const dds_hash_table_ref_t *table, const voi
  * @param table     Pointer to an initialized hash table.
  * @param key       Pointer to the key to remove; must not be NULL.
  * @param out_value Pointer to a pointer that will receive the removed value,
- *                  or NULL to discard.
+ *                  or NULL to discard. When non-NULL, value_destroy_fn is NOT
+ *                  called — the caller takes ownership of the value.
  * @return DDS_OK on success, DDS_INVALID_PARAMETER if table or key is NULL,
  *         DDS_NOT_FOUND if the key does not exist.
  */

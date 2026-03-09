@@ -97,6 +97,7 @@ static dds_result_t grow_hash_table(dds_hash_table_ref_t *table) {
 }
 
 dds_result_t dds_hash_table_ref_init(dds_hash_table_ref_t *table, dds_hash_fn_t hash, dds_key_equal_fn_t key_equal,
+                                     dds_destroy_t key_destroy, dds_destroy_t value_destroy,
                                      dds_alloc_t alloc) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
     if (hash == NULL) return DDS_INVALID_PARAMETER;
@@ -110,6 +111,8 @@ dds_result_t dds_hash_table_ref_init(dds_hash_table_ref_t *table, dds_hash_fn_t 
     table->capacity = 0;
     table->hash_fn = hash;
     table->key_equal_fn = key_equal;
+    table->key_destroy = key_destroy;
+    table->value_destroy = value_destroy;
     table->alloc = alloc;
 
     return DDS_OK;
@@ -117,6 +120,18 @@ dds_result_t dds_hash_table_ref_init(dds_hash_table_ref_t *table, dds_hash_fn_t 
 
 void dds_hash_table_ref_free(dds_hash_table_ref_t *table) {
     if (table == NULL) return;
+
+    // call destroy callbacks for all occupied slots
+    if (table->states != NULL) {
+        for (size_t i = 0; i < table->capacity; i++) {
+            if (((enum SLOT_STATE *) table->states)[i] == OCCUPIED) {
+                if (table->key_destroy.fn != NULL)
+                    table->key_destroy.fn(((const void **) table->keys)[i], table->key_destroy.context);
+                if (table->value_destroy.fn != NULL)
+                    table->value_destroy.fn(((const void **) table->values)[i], table->value_destroy.context);
+            }
+        }
+    }
 
     // free buffers
     table->alloc.free(table->alloc.context, table->keys);
@@ -131,17 +146,27 @@ void dds_hash_table_ref_free(dds_hash_table_ref_t *table) {
     table->capacity = 0;
     table->hash_fn = NULL;
     table->key_equal_fn = NULL;
+    table->key_destroy   = dds_destroy_none();
+    table->value_destroy = dds_destroy_none();
     memset(&table->alloc, 0, sizeof(table->alloc));
 }
 
 dds_result_t dds_hash_table_ref_clear(dds_hash_table_ref_t *table) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
 
-    table->size = 0;
-
     if (table->states != NULL) {
-        memset(((enum SLOT_STATE *) table->states), 0, table->capacity * sizeof(enum SLOT_STATE));
+        for (size_t i = 0; i < table->capacity; i++) {
+            if (((enum SLOT_STATE *) table->states)[i] == OCCUPIED) {
+                if (table->key_destroy.fn != NULL)
+                    table->key_destroy.fn(((const void **) table->keys)[i], table->key_destroy.context);
+                if (table->value_destroy.fn != NULL)
+                    table->value_destroy.fn(((const void **) table->values)[i], table->value_destroy.context);
+            }
+        }
+        memset(table->states, 0, table->capacity * sizeof(enum SLOT_STATE));
     }
+
+    table->size = 0;
 
     return DDS_OK;
 }
@@ -177,7 +202,10 @@ dds_result_t dds_hash_table_ref_set(dds_hash_table_ref_t *table, const void *key
         // if key already in hash table
         if (((enum SLOT_STATE *) table->states)[slot_index] == OCCUPIED) {
             if (table->key_equal_fn(key, ((void **) table->keys)[slot_index]) == true) {
-                // TODO: IMPORTANT
+                if (table->key_destroy.fn != NULL)
+                    table->key_destroy.fn(((const void **) table->keys)[slot_index], table->key_destroy.context);
+                if (table->value_destroy.fn != NULL)
+                    table->value_destroy.fn(((const void **) table->values)[slot_index], table->value_destroy.context);
                 ((const void **) table->keys)[slot_index] = key;
                 ((const void **) table->values)[slot_index] = value;
                 return DDS_OK;
@@ -250,7 +278,12 @@ dds_result_t dds_hash_table_ref_remove(dds_hash_table_ref_t *table, const void *
             if (table->key_equal_fn(key, ((void **) table->keys)[slot_index]) == true) {
                 if (out_value != NULL) {
                     ((void **) out_value)[0] = ((void **) table->values)[slot_index];
+                } else if (table->value_destroy.fn != NULL) {
+                    table->value_destroy.fn(((const void **) table->values)[slot_index], table->value_destroy.context);
                 }
+
+                if (table->key_destroy.fn != NULL)
+                    table->key_destroy.fn(((const void **) table->keys)[slot_index], table->key_destroy.context);
 
                 ((enum SLOT_STATE *) table->states)[slot_index] = DELETED;
                 table->size--;

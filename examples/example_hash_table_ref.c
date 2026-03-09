@@ -36,7 +36,8 @@ void print_person(const person_t *person) {
 int main(void) {
     dds_hash_table_ref_t hash_table;
 
-    dds_hash_table_ref_init(&hash_table, hash_string_key, equal_string_key, dds_alloc_stdlib());
+    dds_hash_table_ref_init(&hash_table, hash_string_key, equal_string_key,
+                            dds_destroy_none(), dds_destroy_none(), dds_alloc_stdlib());
 
     person_t alice;
     alice.name = "Alice";
