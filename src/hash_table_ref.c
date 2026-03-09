@@ -1,5 +1,5 @@
 #include "dds/types.h"
-#include "dds/hash_table.h"
+#include "dds/hash_table_ref.h"
 
 #include <string.h>
 
@@ -9,17 +9,17 @@ enum SLOT_STATE {
     DELETED = 2
 };
 
-static dds_result_t create_initial_data_buffer(dds_hash_table_t *table) {
-    void *keys = table->alloc.malloc(table->alloc.context, DDS_HASH_TABLE_INITIAL_CAPACITY * sizeof(void *));
+static dds_result_t create_initial_data_buffer(dds_hash_table_ref_t *table) {
+    void *keys = table->alloc.malloc(table->alloc.context, DDS_HASH_TABLE_REF_INITIAL_CAPACITY * sizeof(void *));
     if (keys == NULL) return DDS_OUT_OF_MEMORY;
 
-    void *values = table->alloc.malloc(table->alloc.context, DDS_HASH_TABLE_INITIAL_CAPACITY * sizeof(void *));
+    void *values = table->alloc.malloc(table->alloc.context, DDS_HASH_TABLE_REF_INITIAL_CAPACITY * sizeof(void *));
     if (values == NULL) {
         table->alloc.free(table->alloc.context, keys);
         return DDS_OUT_OF_MEMORY;
     }
 
-    void *states = table->alloc.malloc(table->alloc.context, DDS_HASH_TABLE_INITIAL_CAPACITY * sizeof(enum SLOT_STATE));
+    void *states = table->alloc.malloc(table->alloc.context, DDS_HASH_TABLE_REF_INITIAL_CAPACITY * sizeof(enum SLOT_STATE));
     if (states == NULL) {
         table->alloc.free(table->alloc.context, keys);
         table->alloc.free(table->alloc.context, values);
@@ -27,21 +27,21 @@ static dds_result_t create_initial_data_buffer(dds_hash_table_t *table) {
     }
 
     // zero-initialize the states array (EMPTY)
-    memset(states, 0, DDS_HASH_TABLE_INITIAL_CAPACITY * sizeof(enum SLOT_STATE));
+    memset(states, 0, DDS_HASH_TABLE_REF_INITIAL_CAPACITY * sizeof(enum SLOT_STATE));
 
     // update hash table struct
     table->keys = keys;
     table->values = values;
     table->states = states;
-    table->capacity = DDS_HASH_TABLE_INITIAL_CAPACITY;
+    table->capacity = DDS_HASH_TABLE_REF_INITIAL_CAPACITY;
 
     return DDS_OK;
 }
 
-static dds_result_t grow_hash_table(dds_hash_table_t *table) {
-    if (table->capacity > SIZE_MAX / DDS_HASH_TABLE_GROWTH_FACTOR) return DDS_OVERFLOW;
+static dds_result_t grow_hash_table(dds_hash_table_ref_t *table) {
+    if (table->capacity > SIZE_MAX / DDS_HASH_TABLE_REF_GROWTH_FACTOR) return DDS_OVERFLOW;
 
-    const size_t new_capacity = table->capacity * DDS_HASH_TABLE_GROWTH_FACTOR;
+    const size_t new_capacity = table->capacity * DDS_HASH_TABLE_REF_GROWTH_FACTOR;
 
     // allocate new buffers
     void *new_keys = table->alloc.malloc(table->alloc.context, new_capacity * sizeof(void *));
@@ -96,8 +96,8 @@ static dds_result_t grow_hash_table(dds_hash_table_t *table) {
     return DDS_OK;
 }
 
-dds_result_t dds_hash_table_init(dds_hash_table_t *table, dds_hash_fn_t hash, dds_key_equal_fn_t key_equal,
-                                 dds_alloc_t alloc) {
+dds_result_t dds_hash_table_ref_init(dds_hash_table_ref_t *table, dds_hash_fn_t hash, dds_key_equal_fn_t key_equal,
+                                     dds_alloc_t alloc) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
     if (hash == NULL) return DDS_INVALID_PARAMETER;
     if (key_equal == NULL) return DDS_INVALID_PARAMETER;
@@ -115,7 +115,7 @@ dds_result_t dds_hash_table_init(dds_hash_table_t *table, dds_hash_fn_t hash, dd
     return DDS_OK;
 }
 
-void dds_hash_table_free(dds_hash_table_t *table) {
+void dds_hash_table_ref_free(dds_hash_table_ref_t *table) {
     if (table == NULL) return;
 
     // free buffers
@@ -134,7 +134,7 @@ void dds_hash_table_free(dds_hash_table_t *table) {
     memset(&table->alloc, 0, sizeof(table->alloc));
 }
 
-dds_result_t dds_hash_table_clear(dds_hash_table_t *table) {
+dds_result_t dds_hash_table_ref_clear(dds_hash_table_ref_t *table) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
 
     table->size = 0;
@@ -146,7 +146,7 @@ dds_result_t dds_hash_table_clear(dds_hash_table_t *table) {
     return DDS_OK;
 }
 
-dds_result_t dds_hash_table_set(dds_hash_table_t *table, const void *key, const void *value) {
+dds_result_t dds_hash_table_ref_set(dds_hash_table_ref_t *table, const void *key, const void *value) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
     if (key == NULL) return DDS_INVALID_PARAMETER;
     if (value == NULL) return DDS_INVALID_PARAMETER;
@@ -207,7 +207,7 @@ dds_result_t dds_hash_table_set(dds_hash_table_t *table, const void *key, const 
     return DDS_OK;
 }
 
-dds_result_t dds_hash_table_get(const dds_hash_table_t *table, const void *key, void *out_value) {
+dds_result_t dds_hash_table_ref_get(const dds_hash_table_ref_t *table, const void *key, void *out_value) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
     if (key == NULL) return DDS_INVALID_PARAMETER;
     if (table->size == 0) return DDS_NOT_FOUND;
@@ -235,7 +235,7 @@ dds_result_t dds_hash_table_get(const dds_hash_table_t *table, const void *key, 
     return DDS_NOT_FOUND;
 }
 
-dds_result_t dds_hash_table_remove(dds_hash_table_t *table, const void *key, void *out_value) {
+dds_result_t dds_hash_table_ref_remove(dds_hash_table_ref_t *table, const void *key, void *out_value) {
     if (table == NULL) return DDS_INVALID_PARAMETER;
     if (key == NULL) return DDS_INVALID_PARAMETER;
     if (table->size == 0) return DDS_NOT_FOUND;
@@ -266,23 +266,23 @@ dds_result_t dds_hash_table_remove(dds_hash_table_t *table, const void *key, voi
     return DDS_NOT_FOUND;
 }
 
-bool dds_hash_table_contains(const dds_hash_table_t *table, const void *key) {
-    return dds_hash_table_get(table, key, NULL) == DDS_OK;
+bool dds_hash_table_ref_contains(const dds_hash_table_ref_t *table, const void *key) {
+    return dds_hash_table_ref_get(table, key, NULL) == DDS_OK;
 }
 
-size_t dds_hash_table_get_size(const dds_hash_table_t *table) {
+size_t dds_hash_table_ref_get_size(const dds_hash_table_ref_t *table) {
     if (table == NULL) return 0;
 
     return table->size;
 }
 
-size_t dds_hash_table_get_capacity(const dds_hash_table_t *table) {
+size_t dds_hash_table_ref_get_capacity(const dds_hash_table_ref_t *table) {
     if (table == NULL) return 0;
 
     return table->capacity;
 }
 
-bool dds_hash_table_is_empty(const dds_hash_table_t *table) {
+bool dds_hash_table_ref_is_empty(const dds_hash_table_ref_t *table) {
     if (table == NULL) return true;
 
     return table->size == 0;

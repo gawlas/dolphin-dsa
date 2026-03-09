@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "dds/hash_table.h"
+#include "dds/hash_table_ref.h"
 
 size_t hash_string_key(const void *key) {
     const unsigned char *str = (const unsigned char *)key;
@@ -34,9 +34,9 @@ void print_person(const person_t *person) {
 }
 
 int main(void) {
-    dds_hash_table_t hash_table;
+    dds_hash_table_ref_t hash_table;
 
-    dds_hash_table_init(&hash_table, hash_string_key, equal_string_key, dds_alloc_stdlib());
+    dds_hash_table_ref_init(&hash_table, hash_string_key, equal_string_key, dds_alloc_stdlib());
 
     person_t alice;
     alice.name = "Alice";
@@ -50,36 +50,36 @@ int main(void) {
     stefan.name = "Stefan";
     stefan.age = 14;
 
-    dds_hash_table_set(&hash_table, "alice", &alice);
-    dds_hash_table_set(&hash_table, "bob", &bob);
+    dds_hash_table_ref_set(&hash_table, "alice", &alice);
+    dds_hash_table_ref_set(&hash_table, "bob", &bob);
 
     person_t *out;
     dds_result_t result;
 
-    result = dds_hash_table_get(&hash_table, "carry", &out);
+    result = dds_hash_table_ref_get(&hash_table, "carry", &out);
     if (result == DDS_OK) {
         print_person(out);
     }
 
-    result = dds_hash_table_get(&hash_table, "alice", &out);
+    result = dds_hash_table_ref_get(&hash_table, "alice", &out);
     if (result == DDS_OK) {
         print_person(out);
     }
 
-    result = dds_hash_table_get(&hash_table, "bob", &out);
+    result = dds_hash_table_ref_get(&hash_table, "bob", &out);
     if (result == DDS_OK) {
         print_person(out);
         out->age = 26;
     }
 
-    result = dds_hash_table_get(&hash_table, "bob", &out);
+    result = dds_hash_table_ref_get(&hash_table, "bob", &out);
     if (result == DDS_OK) {
         print_person(out);
     }
 
-    dds_hash_table_set(&hash_table, "bob", &stefan);
+    dds_hash_table_ref_set(&hash_table, "bob", &stefan);
 
-    result = dds_hash_table_get(&hash_table, "bob", &out);
+    result = dds_hash_table_ref_get(&hash_table, "bob", &out);
     if (result == DDS_OK) {
         print_person(out);
     }
