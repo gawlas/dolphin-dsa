@@ -363,6 +363,94 @@ void dds_ring_buffer_is_empty_should_return_true_on_empty_ring_buffer(void);
 void dds_ring_buffer_is_empty_should_return_false_after_push(void);
 void dds_ring_buffer_is_empty_should_return_true_after_all_elements_popped(void);
 
+/* dds_stack_init */
+void dds_stack_init_should_return_ok(void);
+void dds_stack_init_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_init_should_return_invalid_parameter_when_element_size_zero(void);
+void dds_stack_init_should_return_invalid_parameter_when_alloc_invalid(void);
+void dds_stack_init_should_create_correct_structure(void);
+
+/* dds_stack_free */
+void dds_stack_free_should_not_crash_when_null(void);
+void dds_stack_free_should_zero_fields(void);
+
+/* dds_stack_clear */
+void dds_stack_clear_should_return_ok(void);
+void dds_stack_clear_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_clear_should_reset_size_to_zero(void);
+void dds_stack_clear_should_preserve_capacity(void);
+void dds_stack_clear_should_allow_push_after_clear(void);
+
+/* dds_stack_reserve */
+void dds_stack_reserve_should_return_ok(void);
+void dds_stack_reserve_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_reserve_should_return_invalid_parameter_when_capacity_zero(void);
+void dds_stack_reserve_should_set_capacity(void);
+void dds_stack_reserve_should_not_change_size(void);
+void dds_stack_reserve_should_be_noop_when_capacity_already_sufficient(void);
+void dds_stack_reserve_should_preserve_elements(void);
+
+/* dds_stack_shrink_to_fit */
+void dds_stack_shrink_to_fit_should_return_ok(void);
+void dds_stack_shrink_to_fit_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_shrink_to_fit_should_set_capacity_to_size(void);
+void dds_stack_shrink_to_fit_should_not_change_size(void);
+void dds_stack_shrink_to_fit_should_preserve_elements(void);
+void dds_stack_shrink_to_fit_should_free_buffer_when_empty(void);
+void dds_stack_shrink_to_fit_should_be_noop_when_already_fitted(void);
+
+/* dds_stack_push */
+void dds_stack_push_should_return_ok(void);
+void dds_stack_push_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_push_should_return_invalid_parameter_when_element_null(void);
+void dds_stack_push_should_increase_size(void);
+void dds_stack_push_should_store_correct_value(void);
+void dds_stack_push_should_grow_capacity(void);
+void dds_stack_push_should_store_struct(void);
+void dds_stack_push_should_allow_reuse_after_pop(void);
+
+/* dds_stack_pop */
+void dds_stack_pop_should_return_ok(void);
+void dds_stack_pop_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_pop_should_return_out_of_range_when_empty(void);
+void dds_stack_pop_should_return_correct_element(void);
+void dds_stack_pop_should_decrease_size(void);
+void dds_stack_pop_should_discard_when_element_null(void);
+void dds_stack_pop_should_return_elements_in_lifo_order(void);
+void dds_stack_pop_should_leave_empty_stack_consistent(void);
+void dds_stack_pop_should_return_struct(void);
+
+/* dds_stack_peek */
+void dds_stack_peek_should_return_ok(void);
+void dds_stack_peek_should_return_invalid_parameter_when_stack_null(void);
+void dds_stack_peek_should_return_invalid_parameter_when_element_null(void);
+void dds_stack_peek_should_return_out_of_range_when_empty(void);
+void dds_stack_peek_should_return_correct_element(void);
+void dds_stack_peek_should_not_remove_element(void);
+void dds_stack_peek_should_return_same_value_as_subsequent_pop(void);
+void dds_stack_peek_should_return_struct(void);
+
+/* dds_stack_get_size */
+void dds_stack_get_size_should_return_zero_when_stack_null(void);
+void dds_stack_get_size_should_return_zero_on_empty_stack(void);
+void dds_stack_get_size_should_return_correct_size(void);
+
+/* dds_stack_get_capacity */
+void dds_stack_get_capacity_should_return_zero_when_stack_null(void);
+void dds_stack_get_capacity_should_return_zero_on_empty_stack(void);
+void dds_stack_get_capacity_should_return_at_least_size(void);
+
+/* dds_stack_is_empty */
+void dds_stack_is_empty_should_return_true_when_stack_null(void);
+void dds_stack_is_empty_should_return_true_on_empty_stack(void);
+void dds_stack_is_empty_should_return_false_after_push(void);
+void dds_stack_is_empty_should_return_true_after_all_elements_popped(void);
+
+/* dds_stack corner cases */
+void dds_stack_should_maintain_lifo_order_across_growth(void);
+void dds_stack_should_allow_push_after_clear_and_preserve_lifo(void);
+void dds_stack_peek_then_pop_should_agree(void);
+
 void setUp(void) {}
 void tearDown(void) {}
 
@@ -687,6 +775,82 @@ int main(void) {
     RUN_TEST(dds_ring_buffer_is_empty_should_return_true_on_empty_ring_buffer);
     RUN_TEST(dds_ring_buffer_is_empty_should_return_false_after_push);
     RUN_TEST(dds_ring_buffer_is_empty_should_return_true_after_all_elements_popped);
+
+    RUN_TEST(dds_stack_init_should_return_ok);
+    RUN_TEST(dds_stack_init_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_init_should_return_invalid_parameter_when_element_size_zero);
+    RUN_TEST(dds_stack_init_should_return_invalid_parameter_when_alloc_invalid);
+    RUN_TEST(dds_stack_init_should_create_correct_structure);
+
+    RUN_TEST(dds_stack_free_should_not_crash_when_null);
+    RUN_TEST(dds_stack_free_should_zero_fields);
+
+    RUN_TEST(dds_stack_clear_should_return_ok);
+    RUN_TEST(dds_stack_clear_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_clear_should_reset_size_to_zero);
+    RUN_TEST(dds_stack_clear_should_preserve_capacity);
+    RUN_TEST(dds_stack_clear_should_allow_push_after_clear);
+
+    RUN_TEST(dds_stack_reserve_should_return_ok);
+    RUN_TEST(dds_stack_reserve_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_reserve_should_return_invalid_parameter_when_capacity_zero);
+    RUN_TEST(dds_stack_reserve_should_set_capacity);
+    RUN_TEST(dds_stack_reserve_should_not_change_size);
+    RUN_TEST(dds_stack_reserve_should_be_noop_when_capacity_already_sufficient);
+    RUN_TEST(dds_stack_reserve_should_preserve_elements);
+
+    RUN_TEST(dds_stack_shrink_to_fit_should_return_ok);
+    RUN_TEST(dds_stack_shrink_to_fit_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_shrink_to_fit_should_set_capacity_to_size);
+    RUN_TEST(dds_stack_shrink_to_fit_should_not_change_size);
+    RUN_TEST(dds_stack_shrink_to_fit_should_preserve_elements);
+    RUN_TEST(dds_stack_shrink_to_fit_should_free_buffer_when_empty);
+    RUN_TEST(dds_stack_shrink_to_fit_should_be_noop_when_already_fitted);
+
+    RUN_TEST(dds_stack_push_should_return_ok);
+    RUN_TEST(dds_stack_push_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_push_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_stack_push_should_increase_size);
+    RUN_TEST(dds_stack_push_should_store_correct_value);
+    RUN_TEST(dds_stack_push_should_grow_capacity);
+    RUN_TEST(dds_stack_push_should_store_struct);
+    RUN_TEST(dds_stack_push_should_allow_reuse_after_pop);
+
+    RUN_TEST(dds_stack_pop_should_return_ok);
+    RUN_TEST(dds_stack_pop_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_pop_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_stack_pop_should_return_correct_element);
+    RUN_TEST(dds_stack_pop_should_decrease_size);
+    RUN_TEST(dds_stack_pop_should_discard_when_element_null);
+    RUN_TEST(dds_stack_pop_should_return_elements_in_lifo_order);
+    RUN_TEST(dds_stack_pop_should_leave_empty_stack_consistent);
+    RUN_TEST(dds_stack_pop_should_return_struct);
+
+    RUN_TEST(dds_stack_peek_should_return_ok);
+    RUN_TEST(dds_stack_peek_should_return_invalid_parameter_when_stack_null);
+    RUN_TEST(dds_stack_peek_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_stack_peek_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_stack_peek_should_return_correct_element);
+    RUN_TEST(dds_stack_peek_should_not_remove_element);
+    RUN_TEST(dds_stack_peek_should_return_same_value_as_subsequent_pop);
+    RUN_TEST(dds_stack_peek_should_return_struct);
+
+    RUN_TEST(dds_stack_get_size_should_return_zero_when_stack_null);
+    RUN_TEST(dds_stack_get_size_should_return_zero_on_empty_stack);
+    RUN_TEST(dds_stack_get_size_should_return_correct_size);
+
+    RUN_TEST(dds_stack_get_capacity_should_return_zero_when_stack_null);
+    RUN_TEST(dds_stack_get_capacity_should_return_zero_on_empty_stack);
+    RUN_TEST(dds_stack_get_capacity_should_return_at_least_size);
+
+    RUN_TEST(dds_stack_is_empty_should_return_true_when_stack_null);
+    RUN_TEST(dds_stack_is_empty_should_return_true_on_empty_stack);
+    RUN_TEST(dds_stack_is_empty_should_return_false_after_push);
+    RUN_TEST(dds_stack_is_empty_should_return_true_after_all_elements_popped);
+
+    RUN_TEST(dds_stack_should_maintain_lifo_order_across_growth);
+    RUN_TEST(dds_stack_should_allow_push_after_clear_and_preserve_lifo);
+    RUN_TEST(dds_stack_peek_then_pop_should_agree);
 
     return UNITY_END();
 }
