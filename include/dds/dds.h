@@ -5,5 +5,6 @@
 #include "types.h"
 #include "vector.h"
 #include "stack.h"
+#include "queue.h"
 
 #endif //DOLPHIN_DSA_DDS_H

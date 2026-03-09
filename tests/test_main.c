@@ -446,6 +446,96 @@ void dds_stack_is_empty_should_return_true_on_empty_stack(void);
 void dds_stack_is_empty_should_return_false_after_push(void);
 void dds_stack_is_empty_should_return_true_after_all_elements_popped(void);
 
+/* dds_queue_init */
+void dds_queue_init_should_return_ok(void);
+void dds_queue_init_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_init_should_return_invalid_parameter_when_element_size_zero(void);
+void dds_queue_init_should_return_invalid_parameter_when_alloc_invalid(void);
+void dds_queue_init_should_create_correct_structure(void);
+
+/* dds_queue_free */
+void dds_queue_free_should_not_crash_when_null(void);
+void dds_queue_free_should_zero_fields(void);
+
+/* dds_queue_clear */
+void dds_queue_clear_should_return_ok(void);
+void dds_queue_clear_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_clear_should_reset_size_to_zero(void);
+void dds_queue_clear_should_preserve_capacity(void);
+void dds_queue_clear_should_allow_enqueue_after_clear(void);
+
+/* dds_queue_reserve */
+void dds_queue_reserve_should_return_ok(void);
+void dds_queue_reserve_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_reserve_should_return_invalid_parameter_when_capacity_zero(void);
+void dds_queue_reserve_should_set_capacity(void);
+void dds_queue_reserve_should_not_change_size(void);
+void dds_queue_reserve_should_be_noop_when_capacity_already_sufficient(void);
+void dds_queue_reserve_should_preserve_elements(void);
+
+/* dds_queue_shrink_to_fit */
+void dds_queue_shrink_to_fit_should_return_ok(void);
+void dds_queue_shrink_to_fit_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_shrink_to_fit_should_set_capacity_to_size(void);
+void dds_queue_shrink_to_fit_should_not_change_size(void);
+void dds_queue_shrink_to_fit_should_preserve_elements(void);
+void dds_queue_shrink_to_fit_should_free_buffer_when_empty(void);
+void dds_queue_shrink_to_fit_should_be_noop_when_already_fitted(void);
+void dds_queue_shrink_to_fit_should_preserve_elements_when_data_is_wrapped(void);
+
+/* dds_queue_enqueue */
+void dds_queue_enqueue_should_return_ok(void);
+void dds_queue_enqueue_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_enqueue_should_return_invalid_parameter_when_element_null(void);
+void dds_queue_enqueue_should_increase_size(void);
+void dds_queue_enqueue_should_store_correct_value(void);
+void dds_queue_enqueue_should_grow_capacity(void);
+void dds_queue_enqueue_should_store_struct(void);
+
+/* dds_queue_dequeue */
+void dds_queue_dequeue_should_return_ok(void);
+void dds_queue_dequeue_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_dequeue_should_return_out_of_range_when_empty(void);
+void dds_queue_dequeue_should_return_correct_element(void);
+void dds_queue_dequeue_should_decrease_size(void);
+void dds_queue_dequeue_should_discard_when_element_null(void);
+void dds_queue_dequeue_should_return_elements_in_fifo_order(void);
+void dds_queue_dequeue_should_leave_empty_queue_consistent(void);
+void dds_queue_dequeue_should_return_struct(void);
+
+/* dds_queue_peek_front */
+void dds_queue_peek_front_should_return_ok(void);
+void dds_queue_peek_front_should_return_invalid_parameter_when_queue_null(void);
+void dds_queue_peek_front_should_return_invalid_parameter_when_element_null(void);
+void dds_queue_peek_front_should_return_out_of_range_when_empty(void);
+void dds_queue_peek_front_should_return_correct_element(void);
+void dds_queue_peek_front_should_not_remove_element(void);
+void dds_queue_peek_front_should_return_same_value_as_subsequent_dequeue(void);
+void dds_queue_peek_front_should_return_struct(void);
+
+/* dds_queue_get_size */
+void dds_queue_get_size_should_return_zero_when_queue_null(void);
+void dds_queue_get_size_should_return_zero_on_empty_queue(void);
+void dds_queue_get_size_should_return_correct_size(void);
+
+/* dds_queue_get_capacity */
+void dds_queue_get_capacity_should_return_zero_when_queue_null(void);
+void dds_queue_get_capacity_should_return_zero_on_empty_queue(void);
+void dds_queue_get_capacity_should_return_at_least_size(void);
+
+/* dds_queue_is_empty */
+void dds_queue_is_empty_should_return_true_when_queue_null(void);
+void dds_queue_is_empty_should_return_true_on_empty_queue(void);
+void dds_queue_is_empty_should_return_false_after_enqueue(void);
+void dds_queue_is_empty_should_return_true_after_all_elements_dequeued(void);
+
+/* dds_queue corner cases */
+void dds_queue_should_maintain_fifo_order_across_growth(void);
+void dds_queue_should_maintain_fifo_order_after_wrap_around(void);
+void dds_queue_should_behave_correctly_with_interleaved_enqueue_dequeue(void);
+void dds_queue_peek_front_then_dequeue_should_agree_through_wrap(void);
+void dds_queue_should_allow_enqueue_after_clear_and_preserve_fifo(void);
+
 /* dds_stack corner cases */
 void dds_stack_should_maintain_lifo_order_across_growth(void);
 void dds_stack_should_allow_push_after_clear_and_preserve_lifo(void);
@@ -775,6 +865,84 @@ int main(void) {
     RUN_TEST(dds_ring_buffer_is_empty_should_return_true_on_empty_ring_buffer);
     RUN_TEST(dds_ring_buffer_is_empty_should_return_false_after_push);
     RUN_TEST(dds_ring_buffer_is_empty_should_return_true_after_all_elements_popped);
+
+    RUN_TEST(dds_queue_init_should_return_ok);
+    RUN_TEST(dds_queue_init_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_init_should_return_invalid_parameter_when_element_size_zero);
+    RUN_TEST(dds_queue_init_should_return_invalid_parameter_when_alloc_invalid);
+    RUN_TEST(dds_queue_init_should_create_correct_structure);
+
+    RUN_TEST(dds_queue_free_should_not_crash_when_null);
+    RUN_TEST(dds_queue_free_should_zero_fields);
+
+    RUN_TEST(dds_queue_clear_should_return_ok);
+    RUN_TEST(dds_queue_clear_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_clear_should_reset_size_to_zero);
+    RUN_TEST(dds_queue_clear_should_preserve_capacity);
+    RUN_TEST(dds_queue_clear_should_allow_enqueue_after_clear);
+
+    RUN_TEST(dds_queue_reserve_should_return_ok);
+    RUN_TEST(dds_queue_reserve_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_reserve_should_return_invalid_parameter_when_capacity_zero);
+    RUN_TEST(dds_queue_reserve_should_set_capacity);
+    RUN_TEST(dds_queue_reserve_should_not_change_size);
+    RUN_TEST(dds_queue_reserve_should_be_noop_when_capacity_already_sufficient);
+    RUN_TEST(dds_queue_reserve_should_preserve_elements);
+
+    RUN_TEST(dds_queue_shrink_to_fit_should_return_ok);
+    RUN_TEST(dds_queue_shrink_to_fit_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_shrink_to_fit_should_set_capacity_to_size);
+    RUN_TEST(dds_queue_shrink_to_fit_should_not_change_size);
+    RUN_TEST(dds_queue_shrink_to_fit_should_preserve_elements);
+    RUN_TEST(dds_queue_shrink_to_fit_should_free_buffer_when_empty);
+    RUN_TEST(dds_queue_shrink_to_fit_should_be_noop_when_already_fitted);
+    RUN_TEST(dds_queue_shrink_to_fit_should_preserve_elements_when_data_is_wrapped);
+
+    RUN_TEST(dds_queue_enqueue_should_return_ok);
+    RUN_TEST(dds_queue_enqueue_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_enqueue_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_queue_enqueue_should_increase_size);
+    RUN_TEST(dds_queue_enqueue_should_store_correct_value);
+    RUN_TEST(dds_queue_enqueue_should_grow_capacity);
+    RUN_TEST(dds_queue_enqueue_should_store_struct);
+
+    RUN_TEST(dds_queue_dequeue_should_return_ok);
+    RUN_TEST(dds_queue_dequeue_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_dequeue_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_queue_dequeue_should_return_correct_element);
+    RUN_TEST(dds_queue_dequeue_should_decrease_size);
+    RUN_TEST(dds_queue_dequeue_should_discard_when_element_null);
+    RUN_TEST(dds_queue_dequeue_should_return_elements_in_fifo_order);
+    RUN_TEST(dds_queue_dequeue_should_leave_empty_queue_consistent);
+    RUN_TEST(dds_queue_dequeue_should_return_struct);
+
+    RUN_TEST(dds_queue_peek_front_should_return_ok);
+    RUN_TEST(dds_queue_peek_front_should_return_invalid_parameter_when_queue_null);
+    RUN_TEST(dds_queue_peek_front_should_return_invalid_parameter_when_element_null);
+    RUN_TEST(dds_queue_peek_front_should_return_out_of_range_when_empty);
+    RUN_TEST(dds_queue_peek_front_should_return_correct_element);
+    RUN_TEST(dds_queue_peek_front_should_not_remove_element);
+    RUN_TEST(dds_queue_peek_front_should_return_same_value_as_subsequent_dequeue);
+    RUN_TEST(dds_queue_peek_front_should_return_struct);
+
+    RUN_TEST(dds_queue_get_size_should_return_zero_when_queue_null);
+    RUN_TEST(dds_queue_get_size_should_return_zero_on_empty_queue);
+    RUN_TEST(dds_queue_get_size_should_return_correct_size);
+
+    RUN_TEST(dds_queue_get_capacity_should_return_zero_when_queue_null);
+    RUN_TEST(dds_queue_get_capacity_should_return_zero_on_empty_queue);
+    RUN_TEST(dds_queue_get_capacity_should_return_at_least_size);
+
+    RUN_TEST(dds_queue_is_empty_should_return_true_when_queue_null);
+    RUN_TEST(dds_queue_is_empty_should_return_true_on_empty_queue);
+    RUN_TEST(dds_queue_is_empty_should_return_false_after_enqueue);
+    RUN_TEST(dds_queue_is_empty_should_return_true_after_all_elements_dequeued);
+
+    RUN_TEST(dds_queue_should_maintain_fifo_order_across_growth);
+    RUN_TEST(dds_queue_should_maintain_fifo_order_after_wrap_around);
+    RUN_TEST(dds_queue_should_behave_correctly_with_interleaved_enqueue_dequeue);
+    RUN_TEST(dds_queue_peek_front_then_dequeue_should_agree_through_wrap);
+    RUN_TEST(dds_queue_should_allow_enqueue_after_clear_and_preserve_fifo);
 
     RUN_TEST(dds_stack_init_should_return_ok);
     RUN_TEST(dds_stack_init_should_return_invalid_parameter_when_stack_null);
