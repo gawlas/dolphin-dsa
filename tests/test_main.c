@@ -541,6 +541,100 @@ void dds_stack_should_maintain_lifo_order_across_growth(void);
 void dds_stack_should_allow_push_after_clear_and_preserve_lifo(void);
 void dds_stack_peek_then_pop_should_agree(void);
 
+/* dds_hash_table_ref_init */
+void dds_hash_table_ref_init_should_return_ok(void);
+void dds_hash_table_ref_init_should_return_invalid_parameter_when_table_null(void);
+void dds_hash_table_ref_init_should_return_invalid_parameter_when_hash_null(void);
+void dds_hash_table_ref_init_should_return_invalid_parameter_when_key_equal_null(void);
+void dds_hash_table_ref_init_should_return_invalid_parameter_when_alloc_malloc_null(void);
+void dds_hash_table_ref_init_should_return_invalid_parameter_when_alloc_free_null(void);
+void dds_hash_table_ref_init_should_create_correct_structure(void);
+void dds_hash_table_ref_init_should_not_allocate_until_first_set(void);
+
+/* dds_hash_table_ref_free */
+void dds_hash_table_ref_free_should_not_crash_when_null(void);
+void dds_hash_table_ref_free_should_zero_fields(void);
+void dds_hash_table_ref_free_should_not_crash_when_table_never_used(void);
+void dds_hash_table_ref_free_should_call_key_destroy_for_all_entries(void);
+void dds_hash_table_ref_free_should_call_value_destroy_for_all_entries(void);
+
+/* dds_hash_table_ref_clear */
+void dds_hash_table_ref_clear_should_return_ok(void);
+void dds_hash_table_ref_clear_should_return_invalid_parameter_when_table_null(void);
+void dds_hash_table_ref_clear_should_reset_size_to_zero(void);
+void dds_hash_table_ref_clear_should_preserve_capacity(void);
+void dds_hash_table_ref_clear_should_allow_set_after_clear(void);
+void dds_hash_table_ref_clear_should_call_key_destroy_for_all_entries(void);
+void dds_hash_table_ref_clear_should_call_value_destroy_for_all_entries(void);
+void dds_hash_table_ref_clear_should_return_not_found_for_previously_existing_key(void);
+
+/* dds_hash_table_ref_set */
+void dds_hash_table_ref_set_should_return_ok(void);
+void dds_hash_table_ref_set_should_return_invalid_parameter_when_table_null(void);
+void dds_hash_table_ref_set_should_return_invalid_parameter_when_key_null(void);
+void dds_hash_table_ref_set_should_return_invalid_parameter_when_value_null(void);
+void dds_hash_table_ref_set_should_increase_size(void);
+void dds_hash_table_ref_set_should_store_key_value_pair(void);
+void dds_hash_table_ref_set_should_overwrite_existing_key(void);
+void dds_hash_table_ref_set_should_not_increase_size_on_overwrite(void);
+void dds_hash_table_ref_set_should_call_key_destroy_on_overwrite(void);
+void dds_hash_table_ref_set_should_call_value_destroy_on_overwrite(void);
+void dds_hash_table_ref_set_should_grow_when_load_factor_exceeded(void);
+
+/* dds_hash_table_ref_get */
+void dds_hash_table_ref_get_should_return_ok(void);
+void dds_hash_table_ref_get_should_return_invalid_parameter_when_table_null(void);
+void dds_hash_table_ref_get_should_return_invalid_parameter_when_key_null(void);
+void dds_hash_table_ref_get_should_return_not_found_when_empty(void);
+void dds_hash_table_ref_get_should_return_not_found_for_missing_key(void);
+void dds_hash_table_ref_get_should_return_correct_value(void);
+void dds_hash_table_ref_get_should_allow_null_out_value(void);
+void dds_hash_table_ref_get_should_not_modify_size(void);
+
+/* dds_hash_table_ref_remove */
+void dds_hash_table_ref_remove_should_return_ok(void);
+void dds_hash_table_ref_remove_should_return_invalid_parameter_when_table_null(void);
+void dds_hash_table_ref_remove_should_return_invalid_parameter_when_key_null(void);
+void dds_hash_table_ref_remove_should_return_not_found_when_empty(void);
+void dds_hash_table_ref_remove_should_return_not_found_for_missing_key(void);
+void dds_hash_table_ref_remove_should_decrease_size(void);
+void dds_hash_table_ref_remove_should_return_value_when_out_value_provided(void);
+void dds_hash_table_ref_remove_should_call_value_destroy_when_out_value_null(void);
+void dds_hash_table_ref_remove_should_not_call_value_destroy_when_out_value_provided(void);
+void dds_hash_table_ref_remove_should_call_key_destroy_always(void);
+void dds_hash_table_ref_remove_should_allow_reinsertion_of_same_key(void);
+
+/* dds_hash_table_ref_contains */
+void dds_hash_table_ref_contains_should_return_false_when_table_null(void);
+void dds_hash_table_ref_contains_should_return_false_when_empty(void);
+void dds_hash_table_ref_contains_should_return_false_for_missing_key(void);
+void dds_hash_table_ref_contains_should_return_true_for_existing_key(void);
+void dds_hash_table_ref_contains_should_return_false_after_remove(void);
+
+/* dds_hash_table_ref_get_size */
+void dds_hash_table_ref_get_size_should_return_zero_when_table_null(void);
+void dds_hash_table_ref_get_size_should_return_zero_on_empty(void);
+void dds_hash_table_ref_get_size_should_return_correct_size(void);
+
+/* dds_hash_table_ref_get_capacity */
+void dds_hash_table_ref_get_capacity_should_return_zero_when_table_null(void);
+void dds_hash_table_ref_get_capacity_should_return_zero_before_first_set(void);
+void dds_hash_table_ref_get_capacity_should_return_at_least_size(void);
+
+/* dds_hash_table_ref_is_empty */
+void dds_hash_table_ref_is_empty_should_return_true_when_table_null(void);
+void dds_hash_table_ref_is_empty_should_return_true_on_empty(void);
+void dds_hash_table_ref_is_empty_should_return_false_after_set(void);
+void dds_hash_table_ref_is_empty_should_return_true_after_all_removed(void);
+
+/* dds_hash_table_ref corner cases */
+void dds_hash_table_ref_should_find_all_entries_after_growth(void);
+void dds_hash_table_ref_should_handle_hash_collisions_correctly(void);
+void dds_hash_table_ref_should_find_entry_past_tombstone(void);
+void dds_hash_table_ref_should_reuse_tombstone_slot_on_insert(void);
+void dds_hash_table_ref_should_handle_interleaved_set_and_remove(void);
+void dds_hash_table_ref_destroy_context_is_passed_correctly(void);
+
 void setUp(void) {}
 void tearDown(void) {}
 
@@ -1019,6 +1113,89 @@ int main(void) {
     RUN_TEST(dds_stack_should_maintain_lifo_order_across_growth);
     RUN_TEST(dds_stack_should_allow_push_after_clear_and_preserve_lifo);
     RUN_TEST(dds_stack_peek_then_pop_should_agree);
+
+    RUN_TEST(dds_hash_table_ref_init_should_return_ok);
+    RUN_TEST(dds_hash_table_ref_init_should_return_invalid_parameter_when_table_null);
+    RUN_TEST(dds_hash_table_ref_init_should_return_invalid_parameter_when_hash_null);
+    RUN_TEST(dds_hash_table_ref_init_should_return_invalid_parameter_when_key_equal_null);
+    RUN_TEST(dds_hash_table_ref_init_should_return_invalid_parameter_when_alloc_malloc_null);
+    RUN_TEST(dds_hash_table_ref_init_should_return_invalid_parameter_when_alloc_free_null);
+    RUN_TEST(dds_hash_table_ref_init_should_create_correct_structure);
+    RUN_TEST(dds_hash_table_ref_init_should_not_allocate_until_first_set);
+
+    RUN_TEST(dds_hash_table_ref_free_should_not_crash_when_null);
+    RUN_TEST(dds_hash_table_ref_free_should_zero_fields);
+    RUN_TEST(dds_hash_table_ref_free_should_not_crash_when_table_never_used);
+    RUN_TEST(dds_hash_table_ref_free_should_call_key_destroy_for_all_entries);
+    RUN_TEST(dds_hash_table_ref_free_should_call_value_destroy_for_all_entries);
+
+    RUN_TEST(dds_hash_table_ref_clear_should_return_ok);
+    RUN_TEST(dds_hash_table_ref_clear_should_return_invalid_parameter_when_table_null);
+    RUN_TEST(dds_hash_table_ref_clear_should_reset_size_to_zero);
+    RUN_TEST(dds_hash_table_ref_clear_should_preserve_capacity);
+    RUN_TEST(dds_hash_table_ref_clear_should_allow_set_after_clear);
+    RUN_TEST(dds_hash_table_ref_clear_should_call_key_destroy_for_all_entries);
+    RUN_TEST(dds_hash_table_ref_clear_should_call_value_destroy_for_all_entries);
+    RUN_TEST(dds_hash_table_ref_clear_should_return_not_found_for_previously_existing_key);
+
+    RUN_TEST(dds_hash_table_ref_set_should_return_ok);
+    RUN_TEST(dds_hash_table_ref_set_should_return_invalid_parameter_when_table_null);
+    RUN_TEST(dds_hash_table_ref_set_should_return_invalid_parameter_when_key_null);
+    RUN_TEST(dds_hash_table_ref_set_should_return_invalid_parameter_when_value_null);
+    RUN_TEST(dds_hash_table_ref_set_should_increase_size);
+    RUN_TEST(dds_hash_table_ref_set_should_store_key_value_pair);
+    RUN_TEST(dds_hash_table_ref_set_should_overwrite_existing_key);
+    RUN_TEST(dds_hash_table_ref_set_should_not_increase_size_on_overwrite);
+    RUN_TEST(dds_hash_table_ref_set_should_call_key_destroy_on_overwrite);
+    RUN_TEST(dds_hash_table_ref_set_should_call_value_destroy_on_overwrite);
+    RUN_TEST(dds_hash_table_ref_set_should_grow_when_load_factor_exceeded);
+
+    RUN_TEST(dds_hash_table_ref_get_should_return_ok);
+    RUN_TEST(dds_hash_table_ref_get_should_return_invalid_parameter_when_table_null);
+    RUN_TEST(dds_hash_table_ref_get_should_return_invalid_parameter_when_key_null);
+    RUN_TEST(dds_hash_table_ref_get_should_return_not_found_when_empty);
+    RUN_TEST(dds_hash_table_ref_get_should_return_not_found_for_missing_key);
+    RUN_TEST(dds_hash_table_ref_get_should_return_correct_value);
+    RUN_TEST(dds_hash_table_ref_get_should_allow_null_out_value);
+    RUN_TEST(dds_hash_table_ref_get_should_not_modify_size);
+
+    RUN_TEST(dds_hash_table_ref_remove_should_return_ok);
+    RUN_TEST(dds_hash_table_ref_remove_should_return_invalid_parameter_when_table_null);
+    RUN_TEST(dds_hash_table_ref_remove_should_return_invalid_parameter_when_key_null);
+    RUN_TEST(dds_hash_table_ref_remove_should_return_not_found_when_empty);
+    RUN_TEST(dds_hash_table_ref_remove_should_return_not_found_for_missing_key);
+    RUN_TEST(dds_hash_table_ref_remove_should_decrease_size);
+    RUN_TEST(dds_hash_table_ref_remove_should_return_value_when_out_value_provided);
+    RUN_TEST(dds_hash_table_ref_remove_should_call_value_destroy_when_out_value_null);
+    RUN_TEST(dds_hash_table_ref_remove_should_not_call_value_destroy_when_out_value_provided);
+    RUN_TEST(dds_hash_table_ref_remove_should_call_key_destroy_always);
+    RUN_TEST(dds_hash_table_ref_remove_should_allow_reinsertion_of_same_key);
+
+    RUN_TEST(dds_hash_table_ref_contains_should_return_false_when_table_null);
+    RUN_TEST(dds_hash_table_ref_contains_should_return_false_when_empty);
+    RUN_TEST(dds_hash_table_ref_contains_should_return_false_for_missing_key);
+    RUN_TEST(dds_hash_table_ref_contains_should_return_true_for_existing_key);
+    RUN_TEST(dds_hash_table_ref_contains_should_return_false_after_remove);
+
+    RUN_TEST(dds_hash_table_ref_get_size_should_return_zero_when_table_null);
+    RUN_TEST(dds_hash_table_ref_get_size_should_return_zero_on_empty);
+    RUN_TEST(dds_hash_table_ref_get_size_should_return_correct_size);
+
+    RUN_TEST(dds_hash_table_ref_get_capacity_should_return_zero_when_table_null);
+    RUN_TEST(dds_hash_table_ref_get_capacity_should_return_zero_before_first_set);
+    RUN_TEST(dds_hash_table_ref_get_capacity_should_return_at_least_size);
+
+    RUN_TEST(dds_hash_table_ref_is_empty_should_return_true_when_table_null);
+    RUN_TEST(dds_hash_table_ref_is_empty_should_return_true_on_empty);
+    RUN_TEST(dds_hash_table_ref_is_empty_should_return_false_after_set);
+    RUN_TEST(dds_hash_table_ref_is_empty_should_return_true_after_all_removed);
+
+    RUN_TEST(dds_hash_table_ref_should_find_all_entries_after_growth);
+    RUN_TEST(dds_hash_table_ref_should_handle_hash_collisions_correctly);
+    RUN_TEST(dds_hash_table_ref_should_find_entry_past_tombstone);
+    RUN_TEST(dds_hash_table_ref_should_reuse_tombstone_slot_on_insert);
+    RUN_TEST(dds_hash_table_ref_should_handle_interleaved_set_and_remove);
+    RUN_TEST(dds_hash_table_ref_destroy_context_is_passed_correctly);
 
     return UNITY_END();
 }
